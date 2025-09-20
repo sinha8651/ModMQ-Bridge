@@ -22,11 +22,16 @@ All notable changes to this project will be documented here.
 
 ## [0.0.1.1] - 2025-09-20
 
+### Added
+
+- Implemented Modbus slave connection operations:
+  - Connect to slave
+  - Disconnect from slave
+  - Reconnect to existing slave session
+
 ### Fixed
 
 - Updated/fixed Modbus connection parameters (host, port, keep-alive) in the application.
-
-
 
 ## [0.0.1] - 2025-09-08
 

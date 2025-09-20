@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.application.close.exception.ResourceNotFoundException;
-import com.application.close.modtcp.entity.ModTcpData;
+import com.application.close.modtcp.entity.TcpData;
 import com.application.close.modtcp.payload.TcpPayload;
 import com.application.close.modtcp.repo.TcpDataRepo;
 
@@ -18,8 +18,8 @@ public class TcpDataServiceImpl implements TcpDataService {
 	private final TcpDataRepo tcpRepo;
 
 	@Override
-	public ModTcpData create(TcpPayload tcpPayload) {
-		ModTcpData tcpData = new ModTcpData();
+	public TcpData create(TcpPayload tcpPayload) {
+		TcpData tcpData = new TcpData();
 		tcpData.setHost(tcpPayload.getHost());
 		tcpData.setKeepAlive(tcpPayload.isKeepAlive());
 		tcpData.setPort(tcpPayload.getPort());
@@ -27,8 +27,8 @@ public class TcpDataServiceImpl implements TcpDataService {
 	}
 
 	@Override
-	public ModTcpData update(int tcpId, TcpPayload tcpPayload) {
-		ModTcpData tcpData = getById(tcpId);
+	public TcpData update(int tcpId, TcpPayload tcpPayload) {
+		TcpData tcpData = getById(tcpId);
 		tcpData.setHost(tcpPayload.getHost());
 		tcpData.setKeepAlive(tcpPayload.isKeepAlive());
 		tcpData.setPort(tcpPayload.getPort());
@@ -41,14 +41,14 @@ public class TcpDataServiceImpl implements TcpDataService {
 	}
 
 	@Override
-	public ModTcpData getById(int tcpId) {
-		ModTcpData tcpData = tcpRepo.findById(tcpId)
+	public TcpData getById(int tcpId) {
+		TcpData tcpData = tcpRepo.findById(tcpId)
 				.orElseThrow(() -> new ResourceNotFoundException("TcpData", "Id", tcpId));
 		return tcpData;
 	}
 
 	@Override
-	public List<ModTcpData> getAll() {
+	public List<TcpData> getAll() {
 		return tcpRepo.findAll();
 	}
 

@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table
-public class ModTcpData {
+public class TcpData {
 
 	@JsonProperty(access = Access.READ_ONLY)
 	@Id
