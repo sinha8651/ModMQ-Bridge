@@ -2,15 +2,13 @@ package com.application.close.modtcp.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
-import com.application.close.modtcp.entity.TcpData;
+import com.application.close.exception.ResourceNotFoundException;
+import com.application.close.modtcp.entity.ModTcpData;
 import com.application.close.modtcp.payload.TcpPayload;
 import com.application.close.modtcp.repo.TcpDataRepo;
 
-import exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,18 +18,20 @@ public class TcpDataServiceImpl implements TcpDataService {
 	private final TcpDataRepo tcpRepo;
 
 	@Override
-	public TcpData create(TcpPayload tcpPayload) {
-		TcpData tcpData = TcpData.of(tcpPayload);
+	public ModTcpData create(TcpPayload tcpPayload) {
+		ModTcpData tcpData = new ModTcpData();
+		tcpData.setHost(tcpPayload.getHost());
+		tcpData.setKeepAlive(tcpPayload.isKeepAlive());
+		tcpData.setPort(tcpPayload.getPort());
 		return tcpRepo.save(tcpData);
 	}
 
 	@Override
-	public TcpData update(int tcpId, TcpPayload tcpPayload) {
-		TcpData tcpData = getById(tcpId);
+	public ModTcpData update(int tcpId, TcpPayload tcpPayload) {
+		ModTcpData tcpData = getById(tcpId);
 		tcpData.setHost(tcpPayload.getHost());
 		tcpData.setKeepAlive(tcpPayload.isKeepAlive());
 		tcpData.setPort(tcpPayload.getPort());
-		tcpData.setConnectionTimeout(tcpPayload.getConnectionTimeout());
 		return tcpRepo.save(tcpData);
 	}
 
@@ -41,14 +41,14 @@ public class TcpDataServiceImpl implements TcpDataService {
 	}
 
 	@Override
-	public TcpData getById(int tcpId) {
-		TcpData tcpData = tcpRepo.findById(tcpId)
+	public ModTcpData getById(int tcpId) {
+		ModTcpData tcpData = tcpRepo.findById(tcpId)
 				.orElseThrow(() -> new ResourceNotFoundException("TcpData", "Id", tcpId));
 		return tcpData;
 	}
 
 	@Override
-	public List<TcpData> getAll() {
+	public List<ModTcpData> getAll() {
 		return tcpRepo.findAll();
 	}
 

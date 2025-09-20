@@ -25,9 +25,4 @@ public class TcpPayload {
 
 	private boolean keepAlive;
 
-	@Min(value = 1000, message = "Connection timeout must be at least 1000 ms")
-	@Max(value = 60000, message = "Connection timeout cannot exceed 60000 ms")
-	@NotNull(message = "Connection Timeout cannot be null")
-	private int connectionTimeout;
-
 }

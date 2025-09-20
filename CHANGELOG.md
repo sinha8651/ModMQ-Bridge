@@ -18,6 +18,16 @@ All notable changes to this project will be documented here.
 
 ### Fixed
 
+-
+
+## [0.0.1.1] - 2025-09-20
+
+### Fixed
+
+- Updated/fixed Modbus connection parameters (host, port, keep-alive) in the application.
+
+
+
 ## [0.0.1] - 2025-09-08
 
 ### Added

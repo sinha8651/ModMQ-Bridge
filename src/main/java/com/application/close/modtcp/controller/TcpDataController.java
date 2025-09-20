@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.application.close.modtcp.entity.TcpData;
+import com.application.close.modtcp.entity.ModTcpData;
 import com.application.close.modtcp.payload.TcpPayload;
 import com.application.close.modtcp.service.TcpDataService;
 
@@ -33,29 +33,29 @@ public class TcpDataController {
 
 	@Operation(summary = "Create a new TCP data entry", description = "Adds a new TCP data record to the system.")
 	@PostMapping
-	public ResponseEntity<TcpData> create(@Valid @RequestBody TcpPayload tcp) {
-		TcpData tcpData = dataService.create(tcp);
+	public ResponseEntity<ModTcpData> create(@Valid @RequestBody TcpPayload tcp) {
+		ModTcpData tcpData = dataService.create(tcp);
 		return ResponseEntity.status(HttpStatus.CREATED).body(tcpData);
 	}
 
 	@Operation(summary = "Update an existing TCP data entry", description = "Updates details of a specific TCP data by its ID.")
 	@PutMapping("/{tcpDataId}")
-	public ResponseEntity<TcpData> update(@PathVariable Integer tcpDataId, @Valid @RequestBody TcpPayload tcp) {
-		TcpData updatedData = dataService.update(tcpDataId, tcp);
+	public ResponseEntity<ModTcpData> update(@PathVariable Integer tcpDataId, @Valid @RequestBody TcpPayload tcp) {
+		ModTcpData updatedData = dataService.update(tcpDataId, tcp);
 		return ResponseEntity.ok(updatedData);
 	}
 
 	@Operation(summary = "Get TCP data by ID", description = "Fetches a TCP data record by its ID.")
 	@GetMapping("/{tcpDataId}")
-	public ResponseEntity<TcpData> getById(@PathVariable Integer tcpDataId) {
-		TcpData tcpData = dataService.getById(tcpDataId);
+	public ResponseEntity<ModTcpData> getById(@PathVariable Integer tcpDataId) {
+		ModTcpData tcpData = dataService.getById(tcpDataId);
 		return ResponseEntity.ok(tcpData);
 	}
 
 	@Operation(summary = "Get all TCP data entries", description = "Retrieves all TCP data records.")
 	@GetMapping
-	public ResponseEntity<List<TcpData>> getAll() {
-		List<TcpData> allData = dataService.getAll();
+	public ResponseEntity<List<ModTcpData>> getAll() {
+		List<ModTcpData> allData = dataService.getAll();
 		return ResponseEntity.ok(allData);
 	}
 

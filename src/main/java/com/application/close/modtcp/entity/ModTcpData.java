@@ -1,6 +1,5 @@
 package com.application.close.modtcp.entity;
 
-import com.application.close.modtcp.payload.TcpPayload;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -19,8 +18,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "tcp_param")
-public class TcpData {
+@Table
+public class ModTcpData {
 
 	@JsonProperty(access = Access.READ_ONLY)
 	@Id
@@ -32,16 +31,5 @@ public class TcpData {
 	private int port;
 
 	private boolean keepAlive;
-
-	private int connectionTimeout;
-
-	public static TcpData of(TcpPayload tcp) {
-		TcpData data = new TcpData();
-		data.setHost(tcp.getHost());
-		data.setKeepAlive(tcp.isKeepAlive());
-		data.setPort(tcp.getPort());
-		data.setConnectionTimeout(tcp.getConnectionTimeout());
-		return data;
-	}
 
 }

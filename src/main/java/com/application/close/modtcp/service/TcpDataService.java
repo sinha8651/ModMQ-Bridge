@@ -2,18 +2,18 @@ package com.application.close.modtcp.service;
 
 import java.util.List;
 
-import com.application.close.modtcp.entity.TcpData;
+import com.application.close.modtcp.entity.ModTcpData;
 import com.application.close.modtcp.payload.TcpPayload;
 
 public interface TcpDataService {
 
-	TcpData create(TcpPayload tcpPayload);
+	ModTcpData create(TcpPayload tcpPayload);
 
-	TcpData update(int tcpId, TcpPayload tcpPayload);
+	ModTcpData update(int tcpId, TcpPayload tcpPayload);
 
 	void delete(int tcpId);
 
-	TcpData getById(int tcpId);
+	ModTcpData getById(int tcpId);
 
-	List<TcpData> getAll();
+	List<ModTcpData> getAll();
 }

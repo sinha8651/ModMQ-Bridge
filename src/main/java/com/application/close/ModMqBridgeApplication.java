@@ -14,7 +14,7 @@ public class ModMqBridgeApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
+		// TODO document why this method is empty
 	}
 
 }
