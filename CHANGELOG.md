@@ -19,6 +19,12 @@ All notable changes to this project will be documented here.
 ### Fixed
 
 -
+## [0.0.2.0] - 2025-09-21
+
+### Added
+
+- Implemented read and write operations for coils and registers in Modbus service
+- Added input validation and consistent error handling
 
 ## [0.0.1.1] - 2025-09-20
 
