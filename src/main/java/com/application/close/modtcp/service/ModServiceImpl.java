@@ -2,6 +2,7 @@ package com.application.close.modtcp.service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import org.springframework.stereotype.Service;
 
@@ -86,7 +87,6 @@ public class ModServiceImpl implements ModService {
 
 		ModbusMaster modbusMaster = ModbusMasterFactory.createModbusMasterTCP(tcpParameters);
 		Modbus.setAutoIncrementTransactionId(true);
-
 		try {
 			modbusMaster.connect();
 		} catch (ModbusIOException e) {
@@ -142,7 +142,7 @@ public class ModServiceImpl implements ModService {
 		}
 
 		try {
-			return modbusMaster.readCoils(slaveId, offset, quantity);
+			return Arrays.copyOf(modbusMaster.readCoils(slaveId, offset, quantity), quantity);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
 			throw new BadRequestException(
 					String.format("Failed to read coils: slaveId: %s ,offset: %s and quantity: %s , message: %s",
@@ -158,7 +158,7 @@ public class ModServiceImpl implements ModService {
 		}
 
 		try {
-			return modbusMaster.readDiscreteInputs(slaveId, offset, quantity);
+			return Arrays.copyOf(modbusMaster.readDiscreteInputs(slaveId, offset, quantity), quantity);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
 			throw new BadRequestException(String.format(
 					"Failed to read discrete inputs: slaveId: %s ,offset: %s and quantity: %s , message: %s", slaveId,

@@ -19,6 +19,13 @@ All notable changes to this project will be documented here.
 ### Fixed
 
 -
+
+## [0.0.2.1] - 2025-10-02
+
+### Added
+
+- controller added for the modbus service
+
 ## [0.0.2.0] - 2025-09-21
 
 ### Added
