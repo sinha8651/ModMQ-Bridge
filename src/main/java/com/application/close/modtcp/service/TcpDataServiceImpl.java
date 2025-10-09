@@ -37,7 +37,8 @@ public class TcpDataServiceImpl implements TcpDataService {
 
 	@Override
 	public void delete(int tcpId) {
-		tcpRepo.deleteById(tcpId);
+		TcpData tcpData = getById(tcpId);
+		tcpRepo.delete(tcpData);
 	}
 
 	@Override

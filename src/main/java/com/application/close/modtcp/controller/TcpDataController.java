@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @Tag(name = "TCP Data", description = "Operations related to TCP data management")
 @RequiredArgsConstructor
@@ -40,14 +41,14 @@ public class TcpDataController {
 
 	@Operation(summary = "Update an existing TCP data entry", description = "Updates details of a specific TCP data by its ID.")
 	@PutMapping("/{tcpDataId}")
-	public ResponseEntity<TcpData> update(@PathVariable Integer tcpDataId, @Valid @RequestBody TcpPayload tcp) {
+	public ResponseEntity<TcpData> update(@PathVariable @NotNull Integer tcpDataId, @Valid @RequestBody TcpPayload tcp) {
 		TcpData updatedData = dataService.update(tcpDataId, tcp);
 		return ResponseEntity.ok(updatedData);
 	}
 
 	@Operation(summary = "Get TCP data by ID", description = "Fetches a TCP data record by its ID.")
 	@GetMapping("/{tcpDataId}")
-	public ResponseEntity<TcpData> getById(@PathVariable Integer tcpDataId) {
+	public ResponseEntity<TcpData> getById(@PathVariable @NotNull Integer tcpDataId) {
 		TcpData tcpData = dataService.getById(tcpDataId);
 		return ResponseEntity.ok(tcpData);
 	}
@@ -61,7 +62,7 @@ public class TcpDataController {
 
 	@Operation(summary = "Delete TCP data by ID", description = "Removes a TCP data record by its ID.")
 	@DeleteMapping("/{tcpDataId}")
-	public ResponseEntity<Void> deleteById(@PathVariable Integer tcpDataId) {
+	public ResponseEntity<Void> deleteById(@PathVariable @NotNull Integer tcpDataId) {
 		dataService.delete(tcpDataId);
 		return ResponseEntity.noContent().build();
 	}

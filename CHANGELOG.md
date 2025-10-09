@@ -20,6 +20,17 @@ All notable changes to this project will be documented here.
 
 -
 
+## [0.0.3.0] - 2025-10-09
+
+### Added
+
+- Added MQTT Parameter Controller, Service, and Entity with complete CRUD and topic management operations.
+
+### Fixed
+
+- Added NotNull annotations for every id , in TcpData and MqttParam.
+
+
 ## [0.0.2.1] - 2025-10-02
 
 ### Added
