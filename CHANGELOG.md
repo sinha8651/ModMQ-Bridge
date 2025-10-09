@@ -29,6 +29,7 @@ All notable changes to this project will be documented here.
 ### Fixed
 
 - Added NotNull annotations for every id , in TcpData and MqttParam.
+- username and password can be null.
 
 
 ## [0.0.2.1] - 2025-10-02

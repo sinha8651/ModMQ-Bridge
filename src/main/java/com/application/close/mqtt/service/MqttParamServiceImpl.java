@@ -24,8 +24,12 @@ public class MqttParamServiceImpl implements MqttParamService {
 		param.setName(paramPayload.getName());
 		param.setClientId(paramPayload.getClientId());
 		param.setUrl("tcp://" + paramPayload.getHost() + ":" + paramPayload.getPort());
-		param.setUserName(paramPayload.getUserName());
-		param.setPassword(paramPayload.getPassword());
+
+		if (paramPayload.getUserName() != null) {
+			param.setUserName(paramPayload.getUserName());
+			param.setPassword(paramPayload.getPassword());
+		}
+
 		param.setConnectTimeout(paramPayload.getConnectTimeout());
 		param.setKeepAlive(paramPayload.getKeepAlive());
 		param.setAutoReconnect(paramPayload.isAutoReconnect());
