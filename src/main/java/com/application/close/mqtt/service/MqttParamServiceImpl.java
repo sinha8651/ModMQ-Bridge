@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.application.close.exception.BadRequestException;
 import com.application.close.exception.ResourceNotFoundException;
 import com.application.close.mqtt.entity.MqttParam;
 import com.application.close.mqtt.payload.MqttParamPayload;
@@ -23,10 +24,16 @@ public class MqttParamServiceImpl implements MqttParamService {
 		MqttParam param = new MqttParam();
 		param.setName(paramPayload.getName());
 		param.setClientId(paramPayload.getClientId());
-		param.setUrl("tcp://" + paramPayload.getHost() + ":" + paramPayload.getPort());
 
-		if (paramPayload.getUserName() != null) {
-			param.setUserName(paramPayload.getUserName());
+		paramPayload.setSslEnabled(paramPayload.isSslEnabled());
+		if (paramPayload.isSslEnabled())
+			param.setUrl("tcp://" + paramPayload.getHost() + ":" + paramPayload.getPort());
+		else
+			param.setUrl("ssl://" + paramPayload.getHost() + ":" + paramPayload.getPort());
+
+		paramPayload.setAuthEnabled(paramPayload.isAuthEnabled());
+		if (paramPayload.isAuthEnabled()) {
+			param.setUsername(paramPayload.getUsername());
 			param.setPassword(paramPayload.getPassword());
 		}
 
@@ -44,9 +51,26 @@ public class MqttParamServiceImpl implements MqttParamService {
 		MqttParam param = getById(paramId);
 		param.setName(paramPayload.getName());
 		param.setClientId(paramPayload.getClientId());
-		param.setUrl("tcp://" + paramPayload.getHost() + ":" + paramPayload.getPort());
-		param.setUserName(paramPayload.getUserName());
-		param.setPassword(paramPayload.getPassword());
+
+		paramPayload.setSslEnabled(paramPayload.isSslEnabled());
+		if (paramPayload.isSslEnabled())
+			param.setUrl("ssl://" + paramPayload.getHost() + ":" + paramPayload.getPort());
+		else
+			param.setUrl("tcp://" + paramPayload.getHost() + ":" + paramPayload.getPort());
+
+		paramPayload.setAuthEnabled(paramPayload.isAuthEnabled());
+		if (paramPayload.isAuthEnabled()) {
+			String username = paramPayload.getUsername();
+			String password = paramPayload.getPassword();
+
+			if (username == null || username.isBlank() || password == null || password.isBlank()) {
+				throw new BadRequestException("Username and password cannot be null or empty");
+			}
+
+			param.setUsername(username);
+			param.setPassword(password);
+		}
+
 		param.setConnectTimeout(paramPayload.getConnectTimeout());
 		param.setKeepAlive(paramPayload.getKeepAlive());
 		param.setAutoReconnect(paramPayload.isAutoReconnect());
@@ -77,14 +101,14 @@ public class MqttParamServiceImpl implements MqttParamService {
 	@Override
 	public MqttParam addPublishTopics(TopicPayload topicPayload) {
 		MqttParam param = getById(topicPayload.getMqttParamId());
-		param.setPublishTopic(topicPayload.getTopics());
+		param.setPublishTopics(topicPayload.getTopics());
 		return paramRepo.save(param);
 	}
 
 	@Override
 	public MqttParam addSubscribeTopics(TopicPayload topicPayload) {
 		MqttParam param = getById(topicPayload.getMqttParamId());
-		param.setSubcribeTopic(topicPayload.getTopics());
+		param.setSubscribeTopics(topicPayload.getTopics());
 		return paramRepo.save(param);
 	}
 

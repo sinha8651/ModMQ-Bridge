@@ -17,7 +17,19 @@ public class MqttServiceImpl implements MqttService {
 	}
 
 	@Override
-	public MqttConnectResp connectWithUserName(int mqttParamId) {
+	public MqttConnectResp connectWithAuth(int mqttParamId) {
+
+		return null;
+	}
+
+	@Override
+	public MqttConnectResp connectWithTLS(int mqttParamId) {
+
+		return null;
+	}
+
+	@Override
+	public MqttConnectResp connectWithTLSAndAuth(int mqttParamId) {
 
 		return null;
 	}
