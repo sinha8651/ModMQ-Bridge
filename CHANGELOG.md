@@ -34,6 +34,10 @@ All notable changes to this project will be documented here.
 
 ## [0.3.1] - 2025-10-10
 
+### Added
+
+- Added two connection methods: one for normal connection and another for authenticated connection.
+
 ### Fixed
 
 - Added boolean variables for SSL and authentication to allow four types of connections with mqtt: 

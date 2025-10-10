@@ -22,4 +22,6 @@ public interface MqttParamService {
 
 	MqttParam addSubscribeTopics(TopicPayload topicPayload);
 
+	void updateConnectionStatus(int paramId, boolean status);
+
 }

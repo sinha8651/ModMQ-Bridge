@@ -112,4 +112,11 @@ public class MqttParamServiceImpl implements MqttParamService {
 		return paramRepo.save(param);
 	}
 
+	@Override
+	public void updateConnectionStatus(int paramId, boolean status) {
+		MqttParam param = getById(paramId);
+		param.setConnected(status);
+		paramRepo.save(param);
+	}
+
 }
