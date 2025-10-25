@@ -34,6 +34,10 @@ All notable changes to this project will be documented here.
 
 ## [0.4.0] - 2025-10-25
 
+### Added
+
+- Added multiple methods for subscribing and publishing, along with a disconnect method.
+
 ### Removed
 
 - SSL and SSL-with-auth connections have been temporarily removed and will be reintroduced after the release of the stable version.

@@ -18,10 +18,18 @@ public interface MqttParamService {
 
 	List<MqttParam> getAll();
 
+	void updateConnectionStatus(int paramId, boolean status);
+
 	MqttParam addPublishTopics(TopicPayload topicPayload);
 
 	MqttParam addSubscribeTopics(TopicPayload topicPayload);
 
-	void updateConnectionStatus(int paramId, boolean status);
+	MqttParam addSingleSubscribeTopic(int paramId, String topic);
+
+	MqttParam addSinglePublishTopic(int paramId, String topic);
+
+	MqttParam removeSubscribeTopic(int paramId, String topic);
+
+	MqttParam removePublishTopic(int paramId, String topic);
 
 }

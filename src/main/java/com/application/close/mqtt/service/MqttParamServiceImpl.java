@@ -1,20 +1,29 @@
 package com.application.close.mqtt.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.stereotype.Service;
+
+import com.application.close.exception.BadRequestException;
 import com.application.close.exception.ResourceNotFoundException;
+import com.application.close.helper.MemoryBuffer;
 import com.application.close.mqtt.entity.MqttParam;
 import com.application.close.mqtt.payload.MqttParamPayload;
 import com.application.close.mqtt.payload.TopicPayload;
 import com.application.close.mqtt.repo.MqttParamRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class MqttParamServiceImpl implements MqttParamService {
 
 	private final MqttParamRepo paramRepo;
+
+	private final MemoryBuffer buffer;
 
 	@Override
 	public MqttParam create(MqttParamPayload paramPayload) {
@@ -87,6 +96,13 @@ public class MqttParamServiceImpl implements MqttParamService {
 	}
 
 	@Override
+	public void updateConnectionStatus(int paramId, boolean status) {
+		MqttParam param = getById(paramId);
+		param.setConnected(status);
+		paramRepo.save(param);
+	}
+
+	@Override
 	public MqttParam addPublishTopics(TopicPayload topicPayload) {
 		MqttParam param = getById(topicPayload.getMqttParamId());
 		param.setPublishTopics(topicPayload.getTopics());
@@ -101,10 +117,86 @@ public class MqttParamServiceImpl implements MqttParamService {
 	}
 
 	@Override
-	public void updateConnectionStatus(int paramId, boolean status) {
+	public MqttParam addSingleSubscribeTopic(int paramId, String topic) {
 		MqttParam param = getById(paramId);
-		param.setConnected(status);
-		paramRepo.save(param);
+
+		if (param.getSubscribeTopics() == null) {
+			param.setSubscribeTopics(new ArrayList<>());
+		}
+
+		if (param.getSubscribeTopics().contains(topic)) {
+			throw new BadRequestException("Topic already exists in subscription list: " + topic);
+		}
+
+		try {
+			if (buffer.getMqttClient().containsKey(paramId))
+				buffer.getMqttClient().get(paramId).subscribe(topic);
+		} catch (MqttException e) {
+			log.info("Failed to subscribe MQTT client to topic: " + topic + "message: " + e.getMessage());
+		}
+
+		param.getSubscribeTopics().add(topic);
+
+		return paramRepo.save(param);
+
+	}
+
+	@Override
+	public MqttParam addSinglePublishTopic(int paramId, String topic) {
+		MqttParam param = getById(paramId);
+
+		if (param.getPublishTopics() == null) {
+			param.setPublishTopics(new ArrayList<>());
+		}
+
+		if (param.getPublishTopics().contains(topic)) {
+			throw new BadRequestException("Topic already exists in publish list: " + topic);
+		}
+
+		param.getPublishTopics().add(topic);
+
+		return paramRepo.save(param);
+	}
+
+	@Override
+	public MqttParam removeSubscribeTopic(int paramId, String topic) {
+		MqttParam param = getById(paramId);
+
+		if (param.getSubscribeTopics() == null) {
+			throw new BadRequestException("No Subscribe Topics  exists");
+		}
+
+		if (!param.getSubscribeTopics().contains(topic)) {
+			throw new BadRequestException("Topic not exists in subscription list: " + topic);
+		}
+
+		try {
+			if (buffer.getMqttClient().containsKey(paramId))
+				buffer.getMqttClient().get(paramId).unsubscribe(topic);
+		} catch (MqttException e) {
+			log.info("Failed to subscribe MQTT client to topic: " + topic + "message: " + e.getMessage());
+		}
+
+		param.getSubscribeTopics().remove(topic);
+
+		return paramRepo.save(param);
+	}
+
+	@Override
+	public MqttParam removePublishTopic(int paramId, String topic) {
+		MqttParam param = getById(paramId);
+
+		if (param.getPublishTopics() == null || param.getPublishTopics().isEmpty()) {
+			throw new BadRequestException("No publish topics exist for this MQTT parameter");
+		}
+
+		if (!param.getPublishTopics().contains(topic)) {
+			throw new BadRequestException("Topic does not exist in publish list: " + topic);
+		}
+
+		param.getPublishTopics().remove(topic);
+
+		return paramRepo.save(param);
 	}
 
 }
