@@ -32,9 +32,9 @@ public class MqttServiceImpl implements MqttService {
 		if (param.isConnected())
 			throw new BadRequestException("MQTT client already connected.");
 
-		// Ensure both SSL and Auth are disabled for normal connection
-		if (param.isSslEnabled() || param.isAuthEnabled())
-			throw new BadRequestException("Both SSL and Auth must be disabled for normal connection.");
+		// Ensure Auth is disabled for normal connection
+		if (param.isAuthEnabled())
+			throw new BadRequestException(" Auth must be disabled for normal connection.");
 
 		MqttConnectResp resp = new MqttConnectResp();
 		resp.setClientId(param.getClientId());
@@ -65,10 +65,10 @@ public class MqttServiceImpl implements MqttService {
 		if (param.isConnected())
 			throw new BadRequestException("MQTT client already connected.");
 
-		if (param.isSslEnabled() || !param.isAuthEnabled())
-			throw new BadRequestException("SSL disable and Auth enable for auth connection.");
+		if (!param.isAuthEnabled())
+			throw new BadRequestException("Auth must be enable for auth connection.");
 
-		if (param.getUsername() == null || param.getPassword() == null)
+		if (param.getUserName() == null || param.getPassword() == null)
 			throw new BadRequestException("Username or password missing for Auth connection.");
 
 		MqttConnectResp resp = new MqttConnectResp();
@@ -79,7 +79,7 @@ public class MqttServiceImpl implements MqttService {
 		try {
 			mqttClient = new MqttClient(param.getUrl(), param.getClientId());
 			MqttConnectOptions mqttOptions = getMqttConnectOptions(param);
-			mqttOptions.setUserName(param.getUsername());
+			mqttOptions.setUserName(param.getUserName());
 			mqttOptions.setPassword(param.getPassword().toCharArray());
 
 			mqttClient.connect(mqttOptions);
@@ -96,22 +96,6 @@ public class MqttServiceImpl implements MqttService {
 		}
 		return resp;
 	}
-
-	@Override
-	public MqttConnectResp connectWithTLS(int mqttParamId) {
-
-		return null;
-	}
-
-	@Override
-	public MqttConnectResp connectWithTLSAndAuth(int mqttParamId) {
-
-		return null;
-	}
-
-	/*
-	 * Helper Methods
-	 */
 
 	private MqttConnectOptions getMqttConnectOptions(MqttParam param) {
 		MqttConnectOptions mqttOptions = new MqttConnectOptions();

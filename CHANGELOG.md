@@ -32,6 +32,12 @@ All notable changes to this project will be documented here.
 
 - 2.1.1.42 → 42nd build of this version.
 
+## [0.4.0] - 2025-10-25
+
+### Removed
+
+- SSL and SSL-with-auth connections have been temporarily removed and will be reintroduced after the release of the stable version.
+
 ## [0.3.1] - 2025-10-10
 
 ### Added

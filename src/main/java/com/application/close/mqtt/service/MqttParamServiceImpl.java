@@ -3,14 +3,11 @@ package com.application.close.mqtt.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-
-import com.application.close.exception.BadRequestException;
 import com.application.close.exception.ResourceNotFoundException;
 import com.application.close.mqtt.entity.MqttParam;
 import com.application.close.mqtt.payload.MqttParamPayload;
 import com.application.close.mqtt.payload.TopicPayload;
 import com.application.close.mqtt.repo.MqttParamRepo;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -24,16 +21,15 @@ public class MqttParamServiceImpl implements MqttParamService {
 		MqttParam param = new MqttParam();
 		param.setName(paramPayload.getName());
 		param.setClientId(paramPayload.getClientId());
+		param.setUrl("tcp://" + paramPayload.getHost() + ":1883");
 
-		paramPayload.setSslEnabled(paramPayload.isSslEnabled());
-		if (paramPayload.isSslEnabled())
-			param.setUrl("tcp://" + paramPayload.getHost() + ":" + paramPayload.getPort());
-		else
-			param.setUrl("ssl://" + paramPayload.getHost() + ":" + paramPayload.getPort());
-
-		paramPayload.setAuthEnabled(paramPayload.isAuthEnabled());
-		if (paramPayload.isAuthEnabled()) {
-			param.setUsername(paramPayload.getUsername());
+		if (paramPayload.getUserName() == null) {
+			param.setAuthEnabled(false);
+			param.setUserName(null);
+			param.setPassword(null);
+		} else {
+			param.setAuthEnabled(true);
+			param.setUserName(paramPayload.getUserName());
 			param.setPassword(paramPayload.getPassword());
 		}
 
@@ -51,24 +47,16 @@ public class MqttParamServiceImpl implements MqttParamService {
 		MqttParam param = getById(paramId);
 		param.setName(paramPayload.getName());
 		param.setClientId(paramPayload.getClientId());
+		param.setUrl("tcp://" + paramPayload.getHost() + ":1883");
 
-		paramPayload.setSslEnabled(paramPayload.isSslEnabled());
-		if (paramPayload.isSslEnabled())
-			param.setUrl("ssl://" + paramPayload.getHost() + ":" + paramPayload.getPort());
-		else
-			param.setUrl("tcp://" + paramPayload.getHost() + ":" + paramPayload.getPort());
-
-		paramPayload.setAuthEnabled(paramPayload.isAuthEnabled());
-		if (paramPayload.isAuthEnabled()) {
-			String username = paramPayload.getUsername();
-			String password = paramPayload.getPassword();
-
-			if (username == null || username.isBlank() || password == null || password.isBlank()) {
-				throw new BadRequestException("Username and password cannot be null or empty");
-			}
-
-			param.setUsername(username);
-			param.setPassword(password);
+		if (paramPayload.getUserName() == null) {
+			param.setAuthEnabled(false);
+			param.setUserName(null);
+			param.setPassword(null);
+		} else {
+			param.setAuthEnabled(true);
+			param.setUserName(paramPayload.getUserName());
+			param.setPassword(paramPayload.getPassword());
 		}
 
 		param.setConnectTimeout(paramPayload.getConnectTimeout());

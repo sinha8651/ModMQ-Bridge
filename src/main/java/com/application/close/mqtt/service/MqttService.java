@@ -8,7 +8,7 @@ public interface MqttService {
 
 	MqttConnectResp connectWithAuth(int mqttParamId); // TCP + username/password
 
-	MqttConnectResp connectWithTLS(int mqttParamId); // TLS (SSL) connection
-
-	MqttConnectResp connectWithTLSAndAuth(int mqttParamId); // TLS + username/password
+//	MqttConnectResp connectWithTLS(int mqttParamId); // TLS (SSL) connection
+//
+//	MqttConnectResp connectWithTLSAndAuth(int mqttParamId); // TLS + username/password
 }

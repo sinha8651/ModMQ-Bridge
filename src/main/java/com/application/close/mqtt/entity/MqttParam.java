@@ -3,6 +3,8 @@ package com.application.close.mqtt.entity;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +23,7 @@ import lombok.Setter;
 @Table
 public class MqttParam {
 
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty(access = Access.READ_ONLY)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -32,17 +34,15 @@ public class MqttParam {
 
 	private String url;
 
-	private boolean sslEnabled;
-
 	private boolean authEnabled;
 
-	private String username;
+	private String userName;
 
 	private String password;
 
-	private byte connectTimeout; // in seconds
+	private byte connectTimeout; // in secs.
 
-	private byte keepAlive; // in seconds
+	private byte keepAlive; // in secs.
 
 	private boolean autoReconnect;
 

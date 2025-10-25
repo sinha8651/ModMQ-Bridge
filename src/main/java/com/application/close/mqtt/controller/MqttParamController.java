@@ -13,12 +13,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.application.close.mqtt.entity.MqttParam;
 import com.application.close.mqtt.payload.MqttParamPayload;
 import com.application.close.mqtt.payload.TopicPayload;
 import com.application.close.mqtt.service.MqttParamService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

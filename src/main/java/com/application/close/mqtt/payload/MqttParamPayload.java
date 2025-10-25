@@ -29,22 +29,14 @@ public class MqttParamPayload {
 	@Pattern(regexp = "^(?!-)[a-zA-Z0-9.-]+(?<!-)$", message = "Invalid host format")
 	private String host;
 
-	@NotNull(message = "Port is required")
-	@Min(value = 1, message = "Port must be > 0")
-	@Max(value = 65535, message = "Port must be <= 65535")
-	private String port;
+//	@NotNull(message = "Port is required")
+//	@Min(value = 1, message = "Port must be > 0")
+//	@Max(value = 65535, message = "Port must be <= 65535")
+//	private String port;
 
-	@NotNull(message = "SSL flag is required")
-	private boolean sslEnabled;
-
-	@NotNull(message = "Auth flag is required")
-	private boolean authEnabled;
-
-//	@NotBlank(message = "Username is required")
 	@Size(min = 3, max = 10, message = "Username must be between 3 and 10 characters")
-	private String username;
+	private String userName;
 
-//	@NotBlank(message = "Password is required")
 	@Size(min = 8, max = 15, message = "Password must be between 8 and 15 characters")
 	private String password;
 
