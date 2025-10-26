@@ -20,6 +20,8 @@ public interface MqttParamService {
 
 	void updateConnectionStatus(int paramId, boolean status);
 
+	boolean existsById(int paramId);
+
 	MqttParam addPublishTopics(TopicPayload topicPayload);
 
 	MqttParam addSubscribeTopics(TopicPayload topicPayload);

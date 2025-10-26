@@ -103,6 +103,11 @@ public class MqttParamServiceImpl implements MqttParamService {
 	}
 
 	@Override
+	public boolean existsById(int paramId) {
+		return paramRepo.existsById(paramId);
+	}
+
+	@Override
 	public MqttParam addPublishTopics(TopicPayload topicPayload) {
 		MqttParam param = getById(topicPayload.getMqttParamId());
 		param.setPublishTopics(topicPayload.getTopics());

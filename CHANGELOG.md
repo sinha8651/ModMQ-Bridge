@@ -32,6 +32,12 @@ All notable changes to this project will be documented here.
 
 - 2.1.1.42 → 42nd build of this version.
 
+## [0.4.0] - 2025-10-26
+
+### Added
+
+- Added Modbus–MQTT bridge service and controller
+
 ## [0.4.0] - 2025-10-25
 
 ### Added

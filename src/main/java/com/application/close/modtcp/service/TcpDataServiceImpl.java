@@ -53,4 +53,9 @@ public class TcpDataServiceImpl implements TcpDataService {
 		return tcpRepo.findAll();
 	}
 
+	@Override
+	public boolean existById(int tcpId) {
+		return tcpRepo.existsById(tcpId);
+	}
+
 }

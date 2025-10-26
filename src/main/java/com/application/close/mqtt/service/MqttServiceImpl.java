@@ -85,8 +85,6 @@ public class MqttServiceImpl implements MqttService {
 			});
 
 			mqttClient.connect(getMqttConnectOptions(param));
-
-			mqttClient.subscribe(param.getSubscribeTopics().stream().toArray(String[]::new));
 			buffer.getMqttClient().put(mqttParamId, mqttClient);
 
 			resp.setConnected(true);
@@ -157,8 +155,6 @@ public class MqttServiceImpl implements MqttService {
 			mqttOptions.setPassword(param.getPassword().toCharArray());
 
 			mqttClient.connect(mqttOptions);
-
-			mqttClient.subscribe(param.getSubscribeTopics().stream().toArray(String[]::new));
 			buffer.getMqttClient().put(mqttParamId, mqttClient);
 
 			resp.setConnected(true);
@@ -189,15 +185,16 @@ public class MqttServiceImpl implements MqttService {
 		if (!param.isConnected())
 			throw new BadRequestException("MQTT client is not connected");
 
-		 try {
-		        if (buffer.getMqttClient().containsKey(mqttParamId)) {
-		            buffer.getMqttClient().get(mqttParamId).disconnect();
-		            buffer.getMqttClient().remove(mqttParamId);
-		            log.info("MQTT client disconnected successfully for ID: {}", mqttParamId);
-		        }
-		    } catch (MqttException e) {
-		        log.error("Failed to disconnect MQTT client with ID {}: {}", mqttParamId, e.getMessage());
-		    }
+		try {
+			if (buffer.getMqttClient().containsKey(mqttParamId)) {
+				buffer.getMqttClient().get(mqttParamId).disconnect();
+				buffer.getMqttClient().remove(mqttParamId);
+				paramService.updateConnectionStatus(mqttParamId, false);
+				log.info("MQTT client disconnected successfully for ID: {}", mqttParamId);
+			}
+		} catch (MqttException e) {
+			log.error("Failed to disconnect MQTT client with ID {}: {}", mqttParamId, e.getMessage());
+		}
 	}
 
 }

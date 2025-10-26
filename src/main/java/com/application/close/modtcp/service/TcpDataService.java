@@ -16,4 +16,7 @@ public interface TcpDataService {
 	TcpData getById(int tcpId);
 
 	List<TcpData> getAll();
+
+	boolean existById(int tcpId);
+
 }
