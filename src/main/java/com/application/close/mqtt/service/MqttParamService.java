@@ -18,7 +18,7 @@ public interface MqttParamService {
 
 	List<MqttParam> getAll();
 
-	void updateConnectionStatus(int paramId, boolean status);
+//	void updateConnectionStatus(int paramId, boolean status);
 
 	boolean existsById(int paramId);
 

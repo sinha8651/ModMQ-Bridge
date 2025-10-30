@@ -1,0 +1,8 @@
+package com.application.close.links;
+
+public enum ModbusFunctionType {
+
+	READ_COILS, READ_DISCRETE_INPUTS, READ_HOLDING_REGISTERS, READ_INPUT_REGISTERS, WRITE_SINGLE_COIL,
+	WRITE_SINGLE_REGISTER
+
+}

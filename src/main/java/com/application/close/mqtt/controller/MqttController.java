@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.application.close.mqtt.payload.MqttConnectResp;
 import com.application.close.mqtt.service.MqttService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,15 +23,15 @@ public class MqttController {
 
 	@Operation(summary = "Connect to MQTT broker", description = "Establishes a connection between the MQTT client and the configured broker for the provided parameter ID.")
 	@PostMapping("/connect/mqttparam/{paramId}")
-	public ResponseEntity<MqttConnectResp> connect(@PathVariable Integer paramId) {
-		MqttConnectResp response = mqttService.connect(paramId);
+	public ResponseEntity<String> connect(@PathVariable Integer paramId) {
+		String response = mqttService.connect(paramId);
 		return ResponseEntity.accepted().body(response);
 	}
 
 	@Operation(summary = "Connect to MQTT broker with authentication", description = "Connects the MQTT client to the broker using stored authentication credentials such as username/password")
 	@PostMapping("/connect/mqttparam/{paramId}/auth")
-	public ResponseEntity<MqttConnectResp> connectWithAuth(@PathVariable Integer paramId) {
-		MqttConnectResp response = mqttService.connectWithAuth(paramId);
+	public ResponseEntity<String> connectWithAuth(@PathVariable Integer paramId) {
+		String response = mqttService.connectWithAuth(paramId);
 		return ResponseEntity.accepted().body(response);
 	}
 

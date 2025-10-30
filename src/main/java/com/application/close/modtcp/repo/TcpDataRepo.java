@@ -6,4 +6,6 @@ import com.application.close.modtcp.entity.TcpData;
 
 public interface TcpDataRepo extends JpaRepository<TcpData, Integer> {
 
+	boolean existsByHostAndPort(String host, int port);
+
 }

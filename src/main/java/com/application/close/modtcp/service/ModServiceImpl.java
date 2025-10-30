@@ -52,8 +52,8 @@ public class ModServiceImpl implements ModService {
 	 * offset 9
 	 *
 	 * - Coils & Discrete Inputs = 1-bit boolean values. - Input & Holding Registers
-	 * = 16-bit unsigned integers (0–65535). - 32-bit (float, long) values = stored
-	 * in TWO consecutive 16-bit registers. - Only COILS and HOLDING REGISTERS are
+	 * = 16-bit unsigned ints (0–65535). - 32-bit (float, long) values = stored in
+	 * TWO consecutive 16-bit registers. - Only COILS and HOLDING REGISTERS are
 	 * writable.
 	 */
 
@@ -62,17 +62,15 @@ public class ModServiceImpl implements ModService {
 	private final MemoryBuffer buffer;
 
 	@Override
-	public String connectToSlaveDevice(Integer tcpDataId) {
-		if (tcpDataId == null) {
-			throw new BadRequestException("tcpDataId cannot be null.");
-		}
+	public String connectToSlaveDevice(int tcpDataId) {
+
+		TcpData tcpData = tcpDataService.getById(tcpDataId);
 
 		// If already in buffer, reconnect instead of duplicating
 		if (buffer.getModbusMaster().containsKey(tcpDataId)) {
 			return reconnect(tcpDataId);
 		}
 
-		TcpData tcpData = tcpDataService.getById(tcpDataId);
 		TcpParameters tcpParameters = new TcpParameters();
 
 		try {
@@ -98,12 +96,8 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public String reconnect(Integer tcpDataId) {
+	public String reconnect(int tcpDataId) {
 		ModbusMaster modbusMaster = buffer.getModbusMaster().get(tcpDataId);
-		if (modbusMaster == null) {
-			throw new BadRequestException("No existing Modbus master found for tcpDataId: " + tcpDataId);
-		}
-
 		try {
 			if (!modbusMaster.isConnected()) {
 				modbusMaster.connect();
@@ -117,7 +111,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public String disconnect(Integer tcpDataId) {
+	public String disconnect(int tcpDataId) {
 		ModbusMaster modbusMaster = buffer.getModbusMaster().get(tcpDataId);
 		if (modbusMaster == null) {
 			throw new BadRequestException(String.format("No Modbus master found for tcpDataId: %s", tcpDataId));
@@ -135,7 +129,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public boolean[] readCoils(Integer tcpDataId, int slaveId, int offset, int quantity) {
+	public boolean[] readCoils(int tcpDataId, int slaveId, int offset, int quantity) {
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		if (offset + quantity > 65536) {
 			throw new BadRequestException("Offset + Quantity exceeds Modbus register limit");
@@ -151,7 +145,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public boolean[] readDiscreteInputs(Integer tcpDataId, int slaveId, int offset, int quantity) {
+	public boolean[] readDiscreteInputs(int tcpDataId, int slaveId, int offset, int quantity) {
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		if (offset + quantity > 65536) {
 			throw new BadRequestException("Offset + Quantity exceeds Modbus register limit");
@@ -167,7 +161,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public int[] readHoldingRegisters(Integer tcpDataId, int slaveId, int offset, int quantity) {
+	public int[] readHoldingRegisters(int tcpDataId, int slaveId, int offset, int quantity) {
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		if (offset + quantity > 65536) {
 			throw new BadRequestException("Offset + Quantity exceeds Modbus register limit");
@@ -183,7 +177,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public int[] readInputRegisters(Integer tcpDataId, int slaveId, int offset, int quantity) {
+	public int[] readInputRegisters(int tcpDataId, int slaveId, int offset, int quantity) {
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		if (offset + quantity > 65536) {
 			throw new BadRequestException("Offset + Quantity exceeds Modbus register limit");
@@ -199,7 +193,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public void writeSingleCoil(Integer tcpDataId, int slaveId, int offset, boolean value) {
+	public void writeSingleCoil(int tcpDataId, int slaveId, int offset, boolean value) {
 
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		try {
@@ -213,7 +207,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public void writeMultipleCoils(Integer tcpDataId, int slaveId, int offset, boolean[] values) {
+	public void writeMultipleCoils(int tcpDataId, int slaveId, int offset, boolean[] values) {
 
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		try {
@@ -227,7 +221,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public void writeSingleRegister(Integer tcpDataId, int slaveId, int offset, int value) {
+	public void writeSingleRegister(int tcpDataId, int slaveId, int offset, int value) {
 
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		try {
@@ -241,7 +235,7 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public void writeMultipleRegisters(Integer tcpDataId, int slaveId, int offset, int[] values) {
+	public void writeMultipleRegisters(int tcpDataId, int slaveId, int offset, int[] values) {
 
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		try {
@@ -253,7 +247,7 @@ public class ModServiceImpl implements ModService {
 		}
 	}
 
-	private ModbusMaster getModbusMaster(Integer tcpDataId) {
+	private ModbusMaster getModbusMaster(int tcpDataId) {
 		ModbusMaster master = buffer.getModbusMaster().get(tcpDataId);
 		if (master == null) {
 			throw new BadRequestException("No existing Modbus master found for tcpDataId: " + tcpDataId);

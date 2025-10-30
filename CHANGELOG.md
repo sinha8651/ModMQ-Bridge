@@ -32,6 +32,21 @@ All notable changes to this project will be documented here.
 
 - 2.1.1.42 → 42nd build of this version.
 
+## [0.5.0] - 2025-10-30
+
+### Added
+
+- Added ModMqttLinks for establishing links between Modbus and MQTT.
+- Introduced Bridge Executor for task execution via executor threads.
+- Created corresponding service layers for both components.
+
+### Fixed
+
+- Deleting a TcpData entry now correctly removes associated links, executors, and objects.
+- Applied the same fix for MQTT deletions.
+- Updated disconnection logic — the client object now remains persistent, and only its 
+  connection state (connect/disconnect) changes instead of removing the object from the map.
+  
 ## [0.4.1] - 2025-10-26
 
 ### Added

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.application.close.exception.BadRequestException;
 import com.application.close.exception.ResourceNotFoundException;
 import com.application.close.helper.MemoryBuffer;
+import com.application.close.links.service.ModMqttLinksService;
 import com.application.close.mqtt.entity.MqttParam;
 import com.application.close.mqtt.payload.MqttParamPayload;
 import com.application.close.mqtt.payload.TopicPayload;
@@ -25,12 +26,21 @@ public class MqttParamServiceImpl implements MqttParamService {
 
 	private final MemoryBuffer buffer;
 
+	private final ModMqttLinksService linksService;
+
 	@Override
 	public MqttParam create(MqttParamPayload paramPayload) {
+
+		if (paramRepo.existsByClientId(paramPayload.getClientId()))
+			throw new BadRequestException("Given Client id already assigned.");
+
+		String url = "tcp://" + paramPayload.getHost() + ":1883";
+		if (paramRepo.existsByUrl(url))
+			throw new BadRequestException("Host and port already assigned.");
+
 		MqttParam param = new MqttParam();
-		param.setName(paramPayload.getName());
 		param.setClientId(paramPayload.getClientId());
-		param.setUrl("tcp://" + paramPayload.getHost() + ":1883");
+		param.setUrl(url);
 
 		if (paramPayload.getUserName() == null) {
 			param.setAuthEnabled(false);
@@ -47,16 +57,29 @@ public class MqttParamServiceImpl implements MqttParamService {
 		param.setAutoReconnect(paramPayload.isAutoReconnect());
 		param.setCleanStart(paramPayload.isCleanStart());
 		param.setQos(paramPayload.getQos());
-		param.setConnected(false);
 		return paramRepo.save(param);
 	}
 
 	@Override
 	public MqttParam update(int paramId, MqttParamPayload paramPayload) {
+
 		MqttParam param = getById(paramId);
-		param.setName(paramPayload.getName());
+
+		if (buffer.getMqttClient().containsKey(paramId) && buffer.getMqttClient().get(paramId).isConnected()) {
+			throw new BadRequestException("MQTT client connected for paramId: " + paramId);
+		}
+
+		buffer.getMqttClient().remove(paramId);
+
+		if (paramRepo.existsByClientId(paramPayload.getClientId()))
+			throw new BadRequestException("Given Client id already assigned.");
+
+		String url = "tcp://" + paramPayload.getHost() + ":1883";
+		if (paramRepo.existsByUrl(url))
+			throw new BadRequestException("Host and port already assigned.");
+
 		param.setClientId(paramPayload.getClientId());
-		param.setUrl("tcp://" + paramPayload.getHost() + ":1883");
+		param.setUrl(url);
 
 		if (paramPayload.getUserName() == null) {
 			param.setAuthEnabled(false);
@@ -73,33 +96,37 @@ public class MqttParamServiceImpl implements MqttParamService {
 		param.setAutoReconnect(paramPayload.isAutoReconnect());
 		param.setCleanStart(paramPayload.isCleanStart());
 		param.setQos(paramPayload.getQos());
-		param.setConnected(false);
 		return paramRepo.save(param);
 	}
 
 	@Override
 	public void delete(int paramId) {
+
 		MqttParam param = getById(paramId);
+
+		// Remove mqtt client from buffer
+		if (buffer.getMqttClient().containsKey(paramId) && buffer.getMqttClient().get(paramId).isConnected()) {
+			throw new BadRequestException("MQTT client connected for paramId: " + paramId);
+		}
+
+		buffer.getMqttClient().remove(paramId);
+
+		// remove links with modbus 
+		linksService.updateByParamId(paramId);
+
 		paramRepo.delete(param);
 	}
 
 	@Override
 	public MqttParam getById(int paramId) {
 		MqttParam param = paramRepo.findById(paramId)
-				.orElseThrow(() -> new ResourceNotFoundException("Mqtt parameters", "id", paramId));
+				.orElseThrow(() -> new ResourceNotFoundException("Mqtt param", "id", paramId));
 		return param;
 	}
 
 	@Override
 	public List<MqttParam> getAll() {
 		return paramRepo.findAll();
-	}
-
-	@Override
-	public void updateConnectionStatus(int paramId, boolean status) {
-		MqttParam param = getById(paramId);
-		param.setConnected(status);
-		paramRepo.save(param);
 	}
 
 	@Override

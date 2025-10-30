@@ -1,11 +1,14 @@
-package com.application.close.mqtt.entity;
+package com.application.close.links.entity;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
+import com.application.close.links.ModbusFunctionType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,35 +24,27 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table
-public class MqttParam {
+public class BridgeExecutor {
 
 	@JsonProperty(access = Access.READ_ONLY)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	private String clientId;
+	private String bridgeName;
 
-	private String url;
+	private int tcpDataId;
 
-	private boolean authEnabled;
+	private int slaveId;
 
-	private String userName;
+	private int offset;
 
-	private String password;
+	private int quantity;
 
-	private byte connectTimeout; // in secs.
+	@Enumerated(EnumType.STRING)
+	private ModbusFunctionType functionType;
 
-	private byte keepAlive; // in secs.
+	private String publishTopic;
 
-	private boolean autoReconnect;
-
-	private boolean cleanStart;
-
-	private byte qos;
-
-	private List<String> publishTopics;
-
-	private List<String> subscribeTopics;
-
+	private LocalDateTime lastExecuted;
 }

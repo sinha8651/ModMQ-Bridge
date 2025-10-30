@@ -6,4 +6,8 @@ import com.application.close.mqtt.entity.MqttParam;
 
 public interface MqttParamRepo extends JpaRepository<MqttParam, Integer> {
 
+	boolean existsByUrl(String url);
+
+	boolean existsByClientId(String clientId);
+
 }

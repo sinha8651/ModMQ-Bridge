@@ -1,6 +1,4 @@
-package com.application.close.mqtt.entity;
-
-import java.util.List;
+package com.application.close.links.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -21,35 +19,15 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table
-public class MqttParam {
-
+public class ModMqttLinks {
+	
 	@JsonProperty(access = Access.READ_ONLY)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-	private String clientId;
-
-	private String url;
-
-	private boolean authEnabled;
-
-	private String userName;
-
-	private String password;
-
-	private byte connectTimeout; // in secs.
-
-	private byte keepAlive; // in secs.
-
-	private boolean autoReconnect;
-
-	private boolean cleanStart;
-
-	private byte qos;
-
-	private List<String> publishTopics;
-
-	private List<String> subscribeTopics;
+	
+	private int tcpDataId;
+	
+	private int mqttParamId;
 
 }
