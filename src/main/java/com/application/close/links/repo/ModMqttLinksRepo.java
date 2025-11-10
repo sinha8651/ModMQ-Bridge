@@ -8,9 +8,9 @@ import com.application.close.links.entity.ModMqttLinks;
 
 public interface ModMqttLinksRepo extends JpaRepository<ModMqttLinks, Integer> {
 
-	Optional<ModMqttLinks> findByTcpDataId(Integer tcpDataId);
+	Optional<ModMqttLinks> findByTcpId(Integer tcpId);
 
-	Optional<ModMqttLinks> findByMqttParamId(Integer mqttParamId);
+	Optional<ModMqttLinks> findByParamId(Integer paramId);
 
-	void deleteByTcpDataId(int tcpDataId);
+	void deleteByTcpId(int tcpId);
 }

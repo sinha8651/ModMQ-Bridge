@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.application.close.exception.BadRequestException;
 import com.application.close.exception.ModbusOperationException;
+import com.application.close.exception.ResourceNotFoundException;
 import com.application.close.helper.MemoryBuffer;
 import com.application.close.modtcp.entity.TcpData;
+import com.application.close.modtcp.repo.TcpDataRepo;
 import com.intelligt.modbus.jlibmodbus.Modbus;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusIOException;
 import com.intelligt.modbus.jlibmodbus.exception.ModbusNumberException;
@@ -58,18 +60,19 @@ public class ModServiceImpl implements ModService {
 	 * writable.
 	 */
 
-	private final TcpDataService tcpDataService;
+	private final TcpDataRepo tcpRepo;
 
 	private final MemoryBuffer buffer;
 
 	@Override
-	public String connectToSlaveDevice(int tcpDataId) {
+	public String connectToSlaveDevice(int tcpId) {
 
-		TcpData tcpData = tcpDataService.getById(tcpDataId);
+		TcpData tcpData = tcpRepo.findById(tcpId)
+				.orElseThrow(() -> new ResourceNotFoundException("TcpData", "Id", tcpId));
 
 		// If already in buffer, reconnect instead of duplicating
-		if (buffer.getModbusMaster().containsKey(tcpDataId)) {
-			return reconnect(tcpDataId);
+		if (buffer.getModbusMaster().containsKey(tcpId)) {
+			return reconnect(tcpId);
 		}
 
 		TcpParameters tcpParameters = new TcpParameters();
@@ -92,46 +95,46 @@ public class ModServiceImpl implements ModService {
 			throw new BadRequestException("Failed to connect Modbus master: " + e.getMessage());
 		}
 
-		buffer.getModbusMaster().put(tcpDataId, modbusMaster);
-		return String.format("Modbus master connected for tcpDataId: %s", tcpDataId);
+		buffer.getModbusMaster().put(tcpId, modbusMaster);
+		return String.format("Modbus master connected for tcpId: %s", tcpId);
 	}
 
 	@Override
-	public String reconnect(int tcpDataId) {
-		ModbusMaster modbusMaster = buffer.getModbusMaster().get(tcpDataId);
+	public String reconnect(int tcpId) {
+		ModbusMaster modbusMaster = buffer.getModbusMaster().get(tcpId);
 		try {
 			if (!modbusMaster.isConnected()) {
 				modbusMaster.connect();
-				return "Reconnected Modbus master for tcpDataId: " + tcpDataId;
+				return "Reconnected Modbus master for tcpId: " + tcpId;
 			} else {
-				return "Modbus master already active for tcpDataId: " + tcpDataId;
+				return "Modbus master already active for tcpId: " + tcpId;
 			}
 		} catch (ModbusIOException e) {
-			throw new BadRequestException("Reconnect failed for tcpDataId " + tcpDataId + ": " + e.getMessage());
+			throw new BadRequestException("Reconnect failed for tcpId " + tcpId + ": " + e.getMessage());
 		}
 	}
 
 	@Override
-	public String disconnect(int tcpDataId) {
-		ModbusMaster modbusMaster = buffer.getModbusMaster().get(tcpDataId);
+	public String disconnect(int tcpId) {
+		ModbusMaster modbusMaster = buffer.getModbusMaster().get(tcpId);
 		if (modbusMaster == null) {
-			throw new BadRequestException(String.format("No Modbus master found for tcpDataId: %s", tcpDataId));
+			throw new BadRequestException(String.format("No Modbus master found for tcpId: %s", tcpId));
 		}
 
 		try {
 			if (modbusMaster.isConnected()) {
 				modbusMaster.disconnect();
 			}
-			return String.format("Modbus master disconnected for tcpDataId: %s", tcpDataId);
+			return String.format("Modbus master disconnected for tcpId: %s", tcpId);
 		} catch (ModbusIOException e) {
 			throw new BadRequestException(String.format(
-					"Failed to disconnect Modbus master for tcpDataId: %s, message: %s", tcpDataId, e.getMessage()));
+					"Failed to disconnect Modbus master for tcpId: %s, message: %s", tcpId, e.getMessage()));
 		}
 	}
 
 	@Override
-	public boolean[] readCoils(int tcpDataId, int slaveId, int offset, int quantity) {
-		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
+	public boolean[] readCoils(int tcpId, int slaveId, int offset, int quantity) {
+		ModbusMaster modbusMaster = getModbusMaster(tcpId);
 		if (offset + quantity > 65536) {
 			throw new ModbusOperationException("Offset + Quantity exceeds Modbus register limit");
 		}
@@ -146,8 +149,8 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public boolean[] readDiscreteInputs(int tcpDataId, int slaveId, int offset, int quantity) {
-		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
+	public boolean[] readDiscreteInputs(int tcpId, int slaveId, int offset, int quantity) {
+		ModbusMaster modbusMaster = getModbusMaster(tcpId);
 		if (offset + quantity > 65536) {
 			throw new ModbusOperationException("Offset + Quantity exceeds Modbus register limit");
 		}
@@ -162,8 +165,8 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public int[] readHoldingRegisters(int tcpDataId, int slaveId, int offset, int quantity) {
-		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
+	public int[] readHoldingRegisters(int tcpId, int slaveId, int offset, int quantity) {
+		ModbusMaster modbusMaster = getModbusMaster(tcpId);
 		if (offset + quantity > 65536) {
 			throw new ModbusOperationException("Offset + Quantity exceeds Modbus register limit");
 		}
@@ -178,8 +181,8 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public int[] readInputRegisters(int tcpDataId, int slaveId, int offset, int quantity) {
-		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
+	public int[] readInputRegisters(int tcpId, int slaveId, int offset, int quantity) {
+		ModbusMaster modbusMaster = getModbusMaster(tcpId);
 		if (offset + quantity > 65536) {
 			throw new ModbusOperationException("Offset + Quantity exceeds Modbus register limit");
 		}
@@ -194,9 +197,9 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public void writeSingleCoil(int tcpDataId, int slaveId, int offset, boolean value) {
+	public void writeSingleCoil(int tcpId, int slaveId, int offset, boolean value) {
 
-		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
+		ModbusMaster modbusMaster = getModbusMaster(tcpId);
 		try {
 			modbusMaster.writeSingleCoil(slaveId, offset, value);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
@@ -208,9 +211,9 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public void writeMultipleCoils(int tcpDataId, int slaveId, int offset, boolean[] values) {
+	public void writeMultipleCoils(int tcpId, int slaveId, int offset, boolean[] values) {
 
-		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
+		ModbusMaster modbusMaster = getModbusMaster(tcpId);
 		try {
 			modbusMaster.writeMultipleCoils(slaveId, offset, values);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
@@ -222,9 +225,9 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public void writeSingleRegister(int tcpDataId, int slaveId, int offset, int value) {
+	public void writeSingleRegister(int tcpId, int slaveId, int offset, int value) {
 
-		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
+		ModbusMaster modbusMaster = getModbusMaster(tcpId);
 		try {
 			modbusMaster.writeSingleRegister(slaveId, offset, value);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
@@ -236,9 +239,9 @@ public class ModServiceImpl implements ModService {
 	}
 
 	@Override
-	public void writeMultipleRegisters(int tcpDataId, int slaveId, int offset, int[] values) {
+	public void writeMultipleRegisters(int tcpId, int slaveId, int offset, int[] values) {
 
-		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
+		ModbusMaster modbusMaster = getModbusMaster(tcpId);
 		try {
 			modbusMaster.writeMultipleRegisters(slaveId, offset, values);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
@@ -248,10 +251,10 @@ public class ModServiceImpl implements ModService {
 		}
 	}
 
-	private ModbusMaster getModbusMaster(int tcpDataId) {
-		ModbusMaster master = buffer.getModbusMaster().get(tcpDataId);
+	private ModbusMaster getModbusMaster(int tcpId) {
+		ModbusMaster master = buffer.getModbusMaster().get(tcpId);
 		if (master == null) {
-			throw new ModbusOperationException("No existing Modbus master found for tcpDataId: " + tcpDataId);
+			throw new ModbusOperationException("No existing Modbus master found for tcpId: " + tcpId);
 		}
 		return master;
 	}

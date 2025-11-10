@@ -22,7 +22,7 @@ public class BridgeExecutorPayload {
 	private String bridgeName;
 
 	@Min(value = 1, message = "Modbus TCP ID must be greater than 0")
-	private int tcpDataId;
+	private int tcpId;
 
 	@Min(value = 1, message = "Slave ID must be greater than 0")
 	@Max(value = 247, message = "Slave ID must not exceed 247 (Modbus standard limit)")

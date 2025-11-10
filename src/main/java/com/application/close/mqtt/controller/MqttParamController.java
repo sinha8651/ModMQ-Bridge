@@ -37,17 +37,17 @@ public class MqttParamController {
 	}
 
 	@Operation(summary = "Update an existing Mqtt param entry", description = "Updates details of a specific Mqtt param by its ID.")
-	@PutMapping("/{mqttParamId}")
-	public ResponseEntity<MqttParam> update(@PathVariable @NotNull Integer mqttParamId,
+	@PutMapping("/{paramId}")
+	public ResponseEntity<MqttParam> update(@PathVariable @NotNull Integer paramId,
 			@Valid @RequestBody MqttParamPayload paramPayload) {
-		MqttParam updatedParam = paramService.update(mqttParamId, paramPayload);
+		MqttParam updatedParam = paramService.update(paramId, paramPayload);
 		return ResponseEntity.ok(updatedParam);
 	}
 
 	@Operation(summary = "Get Mqtt param by ID", description = "Fetches a Mqtt param record by its ID.")
-	@GetMapping("/{mqttParamId}")
-	public ResponseEntity<MqttParam> getById(@PathVariable @NotNull Integer mqttParamId) {
-		MqttParam param = paramService.getById(mqttParamId);
+	@GetMapping("/{paramId}")
+	public ResponseEntity<MqttParam> getById(@PathVariable @NotNull Integer paramId) {
+		MqttParam param = paramService.getById(paramId);
 		return ResponseEntity.ok(param);
 	}
 
@@ -59,9 +59,9 @@ public class MqttParamController {
 	}
 
 	@Operation(summary = "Delete Mqtt param by ID", description = "Removes a Mqtt param record by its ID.")
-	@DeleteMapping("/{mqttParamId}")
-	public ResponseEntity<Void> deleteById(@PathVariable @NotNull Integer mqttParamId) {
-		paramService.delete(mqttParamId);
+	@DeleteMapping("/{paramId}")
+	public ResponseEntity<Void> deleteById(@PathVariable @NotNull Integer paramId) {
+		paramService.delete(paramId);
 		return ResponseEntity.noContent().build();
 	}
 

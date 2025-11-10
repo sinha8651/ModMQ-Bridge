@@ -2,12 +2,12 @@ package com.application.close.mqtt.service;
 
 public interface MqttService {
 
-	String connect(int mqttParamId); // Plain TCP connection
+	String connect(int paramId); // Plain TCP connection
 
-	String connectWithAuth(int mqttParamId); // TCP + username/password
+	String connectWithAuth(int paramId); // TCP + username/password
 
-	String reconnect(int mqttParamId);
+	String reconnect(int paramId);
 
-	void disconnect(int mqttParamId);
+	void disconnect(int paramId);
 
 }

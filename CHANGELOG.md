@@ -39,6 +39,12 @@ All notable changes to this project will be documented here.
 - Added Executor thread processing modbus data.
 - now publishing modbus data in fixed message pattern.
 
+### Fixed
+
+- Multiple circular error fixed.
+- Due to multiple naming conflicts, I renamed one of the variables and methods.
+
+
 ## [0.5.0] - 2025-10-30
 
 ### Added

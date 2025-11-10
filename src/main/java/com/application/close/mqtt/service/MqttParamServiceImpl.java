@@ -136,14 +136,14 @@ public class MqttParamServiceImpl implements MqttParamService {
 
 	@Override
 	public MqttParam addPublishTopics(TopicPayload topicPayload) {
-		MqttParam param = getById(topicPayload.getMqttParamId());
+		MqttParam param = getById(topicPayload.getParamId());
 		param.setPublishTopics(topicPayload.getTopics());
 		return paramRepo.save(param);
 	}
 
 	@Override
 	public MqttParam addSubscribeTopics(TopicPayload topicPayload) {
-		MqttParam param = getById(topicPayload.getMqttParamId());
+		MqttParam param = getById(topicPayload.getParamId());
 		param.setSubscribeTopics(topicPayload.getTopics());
 		return paramRepo.save(param);
 	}

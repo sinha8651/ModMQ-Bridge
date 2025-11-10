@@ -20,14 +20,14 @@ import lombok.Setter;
 @Entity
 @Table
 public class ModMqttLinks {
-	
+
 	@JsonProperty(access = Access.READ_ONLY)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	private int tcpDataId;
-	
-	private int mqttParamId;
+
+	private int tcpId;
+
+	private int paramId;
 
 }

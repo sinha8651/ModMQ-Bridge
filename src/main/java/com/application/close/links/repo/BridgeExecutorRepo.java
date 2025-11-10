@@ -8,9 +8,9 @@ import com.application.close.links.entity.BridgeExecutor;
 
 public interface BridgeExecutorRepo extends JpaRepository<BridgeExecutor, Integer> {
 
-	List<BridgeExecutor> findByTcpDataId(int tcpDataId);
+	List<BridgeExecutor> findBytcpId(int tcpId);
 
-	void deleteAllByTcpDataId(int tcpDataId);
+	void deleteAllBytcpId(int tcpId);
 
 	boolean existsByPublishTopic(String publishTopics);
 

@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 public class DataParser {
 
-	private int tcpDataId;
+	private int tcpId;
 
 	private int slaveId;
 

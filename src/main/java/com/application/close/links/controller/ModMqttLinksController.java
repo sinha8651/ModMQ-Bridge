@@ -22,20 +22,20 @@ public class ModMqttLinksController {
 	private ModMqttLinksService linksService;
 
 	@Operation(summary = "Link Modbus TCP with MQTT Param", description = "Creates a mapping between a Modbus TCP client and an MQTT parameter.")
-	@PostMapping("/connect/modTcpId/{modTcpId}/mqttParamId/{mqttParamId}")
-	public ResponseEntity<String> connectModToMqtt(@PathVariable int modTcpId, @PathVariable int mqttParamId) {
+	@PostMapping("/connect/tcpId/{tcpId}/paramId/{paramId}")
+	public ResponseEntity<String> connectModToMqtt(@PathVariable int tcpId, @PathVariable int paramId) {
 
-		linksService.connectModToMqtt(modTcpId, mqttParamId);
+		linksService.connectModToMqtt(tcpId, paramId);
 		return ResponseEntity
-				.ok("Linked Modbus TCP ID " + modTcpId + " with MQTT Param ID " + mqttParamId + " successfully.");
+				.ok("Linked Modbus TCP ID " + tcpId + " with MQTT Param ID " + paramId + " successfully.");
 	}
 
 	@Operation(summary = "Unlink Modbus TCP from MQTT Param", description = "Removes the existing mapping between a Modbus TCP client and an MQTT parameter.")
-	@DeleteMapping("/disconnect/modTcpId/{modTcpId}")
-	public ResponseEntity<String> disconnectModFromMqtt(@PathVariable int modTcpId) {
-		linksService.disconnectModFromMqtt(modTcpId);
+	@DeleteMapping("/disconnect/tcpId/{tcpId}")
+	public ResponseEntity<String> disconnectModFromMqtt(@PathVariable int tcpId) {
+		linksService.disconnectModFromMqtt(tcpId);
 		return ResponseEntity
-				.ok("Unlinked Modbus TCP ID " + modTcpId + " from its associated MQTT Param successfully.");
+				.ok("Unlinked Modbus TCP ID " + tcpId + " from its associated MQTT Param successfully.");
 	}
 
 }

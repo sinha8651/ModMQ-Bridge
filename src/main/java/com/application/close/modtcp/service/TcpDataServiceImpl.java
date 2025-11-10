@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.application.close.exception.BadRequestException;
 import com.application.close.exception.ResourceNotFoundException;
 import com.application.close.helper.MemoryBuffer;
-import com.application.close.links.service.BridgeExecutorService;
+import com.application.close.links.repo.BridgeExecutorRepo;
 import com.application.close.links.service.ModMqttLinksService;
 import com.application.close.modtcp.entity.TcpData;
 import com.application.close.modtcp.payload.TcpPayload;
@@ -22,7 +22,7 @@ public class TcpDataServiceImpl implements TcpDataService {
 
 	private final MemoryBuffer buffer;
 
-	private final BridgeExecutorService executorService;
+	private final BridgeExecutorRepo executorRepo;
 
 	private final ModMqttLinksService linksService;
 
@@ -74,7 +74,7 @@ public class TcpDataServiceImpl implements TcpDataService {
 		buffer.getModbusMaster().remove(tcpId);
 
 		// Remove from executor thread.
-		executorService.deleteByTcpDataId(tcpId);
+		executorRepo.deleteAllBytcpId(tcpId);
 
 		// Removes links .
 		linksService.deleteByModTcpId(tcpId);
@@ -92,11 +92,6 @@ public class TcpDataServiceImpl implements TcpDataService {
 	@Override
 	public List<TcpData> getAll() {
 		return tcpRepo.findAll();
-	}
-
-	@Override
-	public boolean existById(int tcpId) {
-		return tcpRepo.existsById(tcpId);
 	}
 
 }

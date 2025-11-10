@@ -6,6 +6,7 @@ import com.application.close.links.ModbusFunctionType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,10 +34,11 @@ public class BridgeExecutor {
 
 	private String bridgeName;
 
-	private int tcpDataId;
+	private int tcpId;
 
 	private int slaveId;
 
+	@Column(name = "offset_value")
 	private int offset;
 
 	private int quantity;

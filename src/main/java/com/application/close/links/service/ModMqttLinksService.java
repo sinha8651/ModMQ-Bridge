@@ -4,14 +4,14 @@ import com.application.close.links.entity.ModMqttLinks;
 
 public interface ModMqttLinksService {
 
-	ModMqttLinks connectModToMqtt(int tcpDataId, int mqttParamId);
+	ModMqttLinks connectModToMqtt(int tcpId, int paramId);
 
-	ModMqttLinks disconnectModFromMqtt(int tcpDataId);
+	ModMqttLinks disconnectModFromMqtt(int tcpId);
 
-	ModMqttLinks getByModTcpId(int tcpDataId);
+	ModMqttLinks getByModTcpId(int tcpId);
 
 	void removeLinksOfParamId(int paramId);
 
-	void deleteByModTcpId(int tcpDataId);
+	void deleteByModTcpId(int tcpId);
 
 }

@@ -9,9 +9,11 @@ import com.application.close.exception.BadRequestException;
 import com.application.close.exception.ResourceNotFoundException;
 import com.application.close.links.ModbusFunctionType;
 import com.application.close.links.entity.BridgeExecutor;
+import com.application.close.links.entity.ModMqttLinks;
 import com.application.close.links.payload.BridgeExecutorPayload;
 import com.application.close.links.repo.BridgeExecutorRepo;
-import com.application.close.modtcp.service.TcpDataService;
+import com.application.close.links.repo.ModMqttLinksRepo;
+import com.application.close.modtcp.repo.TcpDataRepo;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,20 +22,23 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 
 	private final BridgeExecutorRepo executorRepo;
 
-	private final ModMqttLinksService linksService;
+	private final ModMqttLinksRepo linksRepo;
 
-	private final TcpDataService dataService;
+	private final TcpDataRepo tcpRepo;
 
 	@Override
 	public BridgeExecutor createBridge(BridgeExecutorPayload executerPayload) {
 
 		// Check for Modbus TcpDataId.
-		int tcpDataId = executerPayload.getTcpDataId();
-		if (!dataService.existById(tcpDataId))
+		int tcpDataId = executerPayload.getTcpId();
+		if (!tcpRepo.existsById(tcpDataId))
 			throw new BadRequestException("Modbus tcp data not found for tcpDataid: " + tcpDataId);
 
 		// Check for MqttParamId.
-		int mqttParamId = linksService.getByModTcpId(executerPayload.getTcpDataId()).getMqttParamId();
+		ModMqttLinks links = linksRepo.findByTcpId(tcpDataId)
+				.orElseThrow(() -> new ResourceNotFoundException("Modbus TCP", "modTcpId", tcpDataId));
+
+		int mqttParamId = links.getParamId();
 		if (mqttParamId == 0)
 			throw new BadRequestException("Mqtt param not links for tcpDataid: " + tcpDataId);
 
@@ -72,12 +77,15 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 		BridgeExecutor bridgeExecutor = getById(executerId);
 
 		// Check for Modbus TcpDataId.
-		int tcpDataId = executerPayload.getTcpDataId();
-		if (!dataService.existById(tcpDataId))
+		int tcpDataId = executerPayload.getTcpId();
+		if (!tcpRepo.existsById(tcpDataId))
 			throw new BadRequestException("Modbus tcp data not found for tcpDataid: " + tcpDataId);
 
 		// Check for MqttParamId.
-		int mqttParamId = linksService.getByModTcpId(executerPayload.getTcpDataId()).getMqttParamId();
+		ModMqttLinks links = linksRepo.findByTcpId(tcpDataId)
+				.orElseThrow(() -> new ResourceNotFoundException("Modbus TCP", "modTcpId", tcpDataId));
+
+		int mqttParamId = links.getParamId();
 		if (mqttParamId == 0) {
 			throw new BadRequestException("Mqtt param not links for tcpDataid: " + tcpDataId);
 		}
@@ -113,17 +121,12 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 
 	@Override
 	public List<BridgeExecutor> getByTcpDataId(int tcpDataId) {
-		return executorRepo.findByTcpDataId(tcpDataId);
+		return executorRepo.findBytcpId(tcpDataId);
 	}
 
 	@Override
 	public List<BridgeExecutor> getAll() {
 		return executorRepo.findAll();
-	}
-
-	@Override
-	public void deleteByTcpDataId(int tcpDataId) {
-		executorRepo.deleteAllByTcpDataId(tcpDataId);
 	}
 
 	@Override

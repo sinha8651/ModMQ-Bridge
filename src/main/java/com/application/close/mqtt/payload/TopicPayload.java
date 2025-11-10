@@ -20,10 +20,9 @@ public class TopicPayload {
 
 	@NotNull(message = "Id must not be null")
 	@Min(value = 1, message = "Id must be greater than 0")
-	private Integer mqttParamId;
+	private Integer paramId;
 
 	@NotEmpty(message = "At least one topic must be provided")
-	private List<@Pattern(regexp = "^(?!.*[#+]).*$", message = "Publish topic must not contain wildcards") 
-				 @NotBlank(message = "Topic cannot be blank") String> topics;
+	private List<@Pattern(regexp = "^(?!.*[#+]).*$", message = "Publish topic must not contain wildcards") @NotBlank(message = "Topic cannot be blank") String> topics;
 
 }
