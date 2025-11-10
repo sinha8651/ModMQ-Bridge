@@ -10,7 +10,9 @@ public interface BridgeExecutorService {
 	BridgeExecutor createBridge(BridgeExecutorPayload executerPayload);
 
 	BridgeExecutor updateBridge(int executerId, BridgeExecutorPayload executerPayload);
-	
+
+	void updateTimesatamp(int executerId);
+
 	BridgeExecutor getById(int executerId);
 
 	List<BridgeExecutor> getByTcpDataId(int tcpDataId);

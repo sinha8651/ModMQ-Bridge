@@ -54,7 +54,7 @@ public class ModMqttLinksServiceImpl implements ModMqttLinksService {
 	}
 
 	@Override
-	public void updateByParamId(int paramId) {
+	public void removeLinksOfParamId(int paramId) {
 		ModMqttLinks links = linksRepo.findByMqttParamId(paramId).orElse(null);
 		if (links != null) {
 			links.setMqttParamId(0);

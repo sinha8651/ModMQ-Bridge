@@ -10,7 +10,7 @@ public interface ModMqttLinksService {
 
 	ModMqttLinks getByModTcpId(int tcpDataId);
 
-	void updateByParamId(int paramId);
+	void removeLinksOfParamId(int paramId);
 
 	void deleteByModTcpId(int tcpDataId);
 

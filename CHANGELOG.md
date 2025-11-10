@@ -32,6 +32,13 @@ All notable changes to this project will be documented here.
 
 - 2.1.1.42 → 42nd build of this version.
 
+## [0.5.1] - 2025-11-10
+
+### Added
+
+- Added Executor thread processing modbus data.
+- now publishing modbus data in fixed message pattern.
+
 ## [0.5.0] - 2025-10-30
 
 ### Added

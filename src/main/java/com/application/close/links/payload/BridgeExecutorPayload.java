@@ -1,7 +1,5 @@
 package com.application.close.links.payload;
 
-import com.application.close.links.ModbusFunctionType;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -38,7 +36,7 @@ public class BridgeExecutorPayload {
 	private int quantity;
 
 	@NotNull(message = "Function type is required")
-	private ModbusFunctionType functionType;
+	private String functionType;
 
 	@NotBlank(message = "Publish topic is required and cannot be blank")
 	@Pattern(regexp = "^[^#+]*$", message = "Publish topic must not contain wildcard characters '+' or '#'")

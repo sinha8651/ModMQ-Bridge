@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.springframework.stereotype.Service;
 
 import com.application.close.exception.BadRequestException;
+import com.application.close.exception.ModbusOperationException;
 import com.application.close.helper.MemoryBuffer;
 import com.application.close.modtcp.entity.TcpData;
 import com.intelligt.modbus.jlibmodbus.Modbus;
@@ -132,13 +133,13 @@ public class ModServiceImpl implements ModService {
 	public boolean[] readCoils(int tcpDataId, int slaveId, int offset, int quantity) {
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		if (offset + quantity > 65536) {
-			throw new BadRequestException("Offset + Quantity exceeds Modbus register limit");
+			throw new ModbusOperationException("Offset + Quantity exceeds Modbus register limit");
 		}
 
 		try {
 			return Arrays.copyOf(modbusMaster.readCoils(slaveId, offset, quantity), quantity);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-			throw new BadRequestException(
+			throw new ModbusOperationException(
 					String.format("Failed to read coils: slaveId: %s ,offset: %s and quantity: %s , message: %s",
 							slaveId, offset, quantity, e.getMessage()));
 		}
@@ -148,13 +149,13 @@ public class ModServiceImpl implements ModService {
 	public boolean[] readDiscreteInputs(int tcpDataId, int slaveId, int offset, int quantity) {
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		if (offset + quantity > 65536) {
-			throw new BadRequestException("Offset + Quantity exceeds Modbus register limit");
+			throw new ModbusOperationException("Offset + Quantity exceeds Modbus register limit");
 		}
 
 		try {
 			return Arrays.copyOf(modbusMaster.readDiscreteInputs(slaveId, offset, quantity), quantity);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-			throw new BadRequestException(String.format(
+			throw new ModbusOperationException(String.format(
 					"Failed to read discrete inputs: slaveId: %s ,offset: %s and quantity: %s , message: %s", slaveId,
 					offset, quantity, e.getMessage()));
 		}
@@ -164,13 +165,13 @@ public class ModServiceImpl implements ModService {
 	public int[] readHoldingRegisters(int tcpDataId, int slaveId, int offset, int quantity) {
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		if (offset + quantity > 65536) {
-			throw new BadRequestException("Offset + Quantity exceeds Modbus register limit");
+			throw new ModbusOperationException("Offset + Quantity exceeds Modbus register limit");
 		}
 
 		try {
 			return modbusMaster.readHoldingRegisters(slaveId, offset, quantity);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-			throw new BadRequestException(String.format(
+			throw new ModbusOperationException(String.format(
 					"Failed to read holding registers: slaveId: %s ,offset: %s and quantity: %s , message: %s", slaveId,
 					offset, quantity, e.getMessage()));
 		}
@@ -180,13 +181,13 @@ public class ModServiceImpl implements ModService {
 	public int[] readInputRegisters(int tcpDataId, int slaveId, int offset, int quantity) {
 		ModbusMaster modbusMaster = getModbusMaster(tcpDataId);
 		if (offset + quantity > 65536) {
-			throw new BadRequestException("Offset + Quantity exceeds Modbus register limit");
+			throw new ModbusOperationException("Offset + Quantity exceeds Modbus register limit");
 		}
 
 		try {
 			return modbusMaster.readInputRegisters(slaveId, offset, quantity);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-			throw new BadRequestException(String.format(
+			throw new ModbusOperationException(String.format(
 					"Failed to read input registers: slaveId: %s ,offset: %s and quantity: %s , message: %s", slaveId,
 					offset, quantity, e.getMessage()));
 		}
@@ -199,7 +200,7 @@ public class ModServiceImpl implements ModService {
 		try {
 			modbusMaster.writeSingleCoil(slaveId, offset, value);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-			throw new BadRequestException(
+			throw new ModbusOperationException(
 					String.format("Failed to write single coil: slaveId: %s ,offset: %s and value: %s , message: %s",
 							slaveId, offset, value, e.getMessage()));
 		}
@@ -213,7 +214,7 @@ public class ModServiceImpl implements ModService {
 		try {
 			modbusMaster.writeMultipleCoils(slaveId, offset, values);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-			throw new BadRequestException(
+			throw new ModbusOperationException(
 					String.format("Failed to write multiple coils: slaveId: %s ,offset: %s and value: %s , message: %s",
 							slaveId, offset, values, e.getMessage()));
 		}
@@ -227,7 +228,7 @@ public class ModServiceImpl implements ModService {
 		try {
 			modbusMaster.writeSingleRegister(slaveId, offset, value);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-			throw new BadRequestException(String.format(
+			throw new ModbusOperationException(String.format(
 					"Failed to write single registers: slaveId: %s ,offset: %s and value: %s , message: %s", slaveId,
 					offset, value, e.getMessage()));
 		}
@@ -241,7 +242,7 @@ public class ModServiceImpl implements ModService {
 		try {
 			modbusMaster.writeMultipleRegisters(slaveId, offset, values);
 		} catch (ModbusProtocolException | ModbusNumberException | ModbusIOException e) {
-			throw new BadRequestException(String.format(
+			throw new ModbusOperationException(String.format(
 					"Failed to write multiple registers: slaveId: %s ,offset: %s and value: %s , message: %s", slaveId,
 					offset, values, e.getMessage()));
 		}
@@ -250,7 +251,7 @@ public class ModServiceImpl implements ModService {
 	private ModbusMaster getModbusMaster(int tcpDataId) {
 		ModbusMaster master = buffer.getModbusMaster().get(tcpDataId);
 		if (master == null) {
-			throw new BadRequestException("No existing Modbus master found for tcpDataId: " + tcpDataId);
+			throw new ModbusOperationException("No existing Modbus master found for tcpDataId: " + tcpDataId);
 		}
 		return master;
 	}

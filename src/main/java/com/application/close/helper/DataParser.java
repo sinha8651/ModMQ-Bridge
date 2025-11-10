@@ -1,0 +1,31 @@
+package com.application.close.helper;
+
+import java.time.LocalDateTime;
+import java.util.Map;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class DataParser {
+
+	private int tcpDataId;
+
+	private int slaveId;
+
+	private int offset;
+
+	private int quantity;
+
+	private String functionType;
+
+	private LocalDateTime receivedAt;
+
+	private Map<Integer, Object> data;
+
+}

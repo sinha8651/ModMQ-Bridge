@@ -111,8 +111,8 @@ public class MqttParamServiceImpl implements MqttParamService {
 
 		buffer.getMqttClient().remove(paramId);
 
-		// remove links with modbus 
-		linksService.updateByParamId(paramId);
+		// remove links with modbus
+		linksService.removeLinksOfParamId(paramId);
 
 		paramRepo.delete(param);
 	}

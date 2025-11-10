@@ -17,4 +17,9 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
+
+	@ExceptionHandler(ModbusOperationException.class)
+	public ResponseEntity<String> handleModbusOperationException(ModbusOperationException ex) {
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	}
 }
