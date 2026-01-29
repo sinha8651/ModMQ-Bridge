@@ -47,8 +47,9 @@ public class ExecutorThread {
 
 	private final MemoryBuffer buffer;
 
-	@Scheduled(fixedRate = 18000)
+	@Scheduled(fixedRate = 180000, initialDelay = 180000)
 	public void fetchingModbusData() {
+		log.info("\n--------Bridge executors started--------\n");
 		executor.submit(this::processModbusBridges);
 	}
 
@@ -123,8 +124,8 @@ public class ExecutorThread {
 			return object;
 
 		case READ_DISCRETE_INPUTS:
-			boolean[] inputs = modService.readDiscreteInputs(bridge.getTcpId(), bridge.getSlaveId(),
-					bridge.getOffset(), bridge.getQuantity());
+			boolean[] inputs = modService.readDiscreteInputs(bridge.getTcpId(), bridge.getSlaveId(), bridge.getOffset(),
+					bridge.getQuantity());
 			object = new Object[inputs.length];
 			for (int i = 0; i < inputs.length; i++) {
 				object[i] = inputs[i];
@@ -162,7 +163,7 @@ public class ExecutorThread {
 		parser.setQuantity(bridge.getQuantity());
 		parser.setOffset(bridge.getOffset());
 		parser.setFunctionType(bridge.getFunctionType().toString());
-		parser.setReceivedAt(LocalDateTime.now());
+		parser.setReceivedAt(LocalDateTime.now().toString());
 
 		Map<Integer, Object> data = new HashMap<>();
 

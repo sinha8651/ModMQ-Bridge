@@ -1,6 +1,5 @@
 package com.application.close.helper;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ public class DataParser {
 
 	private String functionType;
 
-	private LocalDateTime receivedAt;
+	private String receivedAt;
 
 	private Map<Integer, Object> data;
 

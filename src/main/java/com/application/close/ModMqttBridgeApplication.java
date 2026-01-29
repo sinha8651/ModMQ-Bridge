@@ -3,7 +3,12 @@ package com.application.close;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@EnableScheduling
 @SpringBootApplication
 public class ModMqttBridgeApplication implements CommandLineRunner {
 
@@ -14,7 +19,7 @@ public class ModMqttBridgeApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// TODO document why this method is empty
+
 	}
 
 }

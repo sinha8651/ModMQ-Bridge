@@ -32,6 +32,12 @@ All notable changes to this project will be documented here.
 
 - 2.1.1.42 → 42nd build of this version.
 
+## [0.5.2] - 2026-01-29
+
+- Enabled scheduling with bridge execution every 3 minutes
+- Added BridgeExecutor controller
+- Released first working build
+
 ## [0.5.1] - 2025-11-10
 
 ### Added

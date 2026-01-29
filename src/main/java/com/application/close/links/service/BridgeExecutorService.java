@@ -19,6 +19,8 @@ public interface BridgeExecutorService {
 
 	List<BridgeExecutor> getAll();
 
+	List<Integer> getAllTcpId();
+
 	void deleteById(int executerId);
 
 }

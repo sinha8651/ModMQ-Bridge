@@ -14,6 +14,7 @@ import com.application.close.links.payload.BridgeExecutorPayload;
 import com.application.close.links.repo.BridgeExecutorRepo;
 import com.application.close.links.repo.ModMqttLinksRepo;
 import com.application.close.modtcp.repo.TcpDataRepo;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -50,6 +51,7 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 
 		BridgeExecutor bridgeExecutor = new BridgeExecutor();
 		bridgeExecutor.setBridgeName(executerPayload.getBridgeName());
+		bridgeExecutor.setTcpId(tcpDataId);
 		bridgeExecutor.setFunctionType(ModbusFunctionType.valueOf(executerPayload.getFunctionType()));
 		bridgeExecutor.setOffset(executerPayload.getOffset());
 		bridgeExecutor.setPublishTopic(executerPayload.getPublishTopic());
@@ -133,6 +135,12 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 	public void deleteById(int executerId) {
 		BridgeExecutor bridgeExecutor = getById(executerId);
 		executorRepo.delete(bridgeExecutor);
+	}
+
+	@Override
+	public List<Integer> getAllTcpId() {
+		List<Integer> tcpIds = executorRepo.findAll().stream().map(t -> t.getTcpId()).toList();
+		return tcpIds;
 	}
 
 }

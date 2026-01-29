@@ -40,14 +40,14 @@ public class TcpDataController {
 	}
 
 	@Operation(summary = "Update an existing TCP data entry", description = "Updates details of a specific TCP data by its ID.")
-	@PutMapping("/{tcpId}")
+	@PutMapping("/tcpdata/{tcpId}")
 	public ResponseEntity<TcpData> update(@PathVariable @NotNull Integer tcpId, @Valid @RequestBody TcpPayload tcp) {
 		TcpData updatedData = dataService.update(tcpId, tcp);
 		return ResponseEntity.ok(updatedData);
 	}
 
 	@Operation(summary = "Get TCP data by ID", description = "Fetches a TCP data record by its ID.")
-	@GetMapping("/{tcpId}")
+	@GetMapping("/tcpdata/{tcpId}")
 	public ResponseEntity<TcpData> getById(@PathVariable @NotNull Integer tcpId) {
 		TcpData tcpData = dataService.getById(tcpId);
 		return ResponseEntity.ok(tcpData);
@@ -61,7 +61,7 @@ public class TcpDataController {
 	}
 
 	@Operation(summary = "Delete TCP data by ID", description = "Removes a TCP data record by its ID.")
-	@DeleteMapping("/{tcpId}")
+	@DeleteMapping("/tcpdata/{tcpId}")
 	public ResponseEntity<Void> deleteById(@PathVariable @NotNull Integer tcpId) {
 		dataService.delete(tcpId);
 		return ResponseEntity.noContent().build();
