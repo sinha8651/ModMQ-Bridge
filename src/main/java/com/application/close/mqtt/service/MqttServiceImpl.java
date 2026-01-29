@@ -39,7 +39,9 @@ public class MqttServiceImpl implements MqttService {
 		}
 
 		if (param.isAuthEnabled()) {
-			throw new BadRequestException("Authentication must be disabled for a normal (non-auth) connection.");
+			String mess = "Authentication must be disabled for a normal (non-auth) connection.";
+			log.error(mess);
+			throw new BadRequestException(mess);
 		}
 
 		MqttClient mqttClient = null;
@@ -84,8 +86,9 @@ public class MqttServiceImpl implements MqttService {
 			} catch (Exception ex) {
 				log.warn("Failed to close MQTT client after error: {}", ex.getMessage());
 			}
-			throw new BadRequestException(
-					String.format("MQTT connection failed for %s: %s", param.getUrl(), e.getMessage()));
+			String mess = String.format("MQTT connection failed for %s: %s", param.getUrl(), e.getMessage());
+			log.error(mess);
+			throw new BadRequestException(mess);
 		}
 		return String.format("Mqtt client connected for paramId: %s", paramId);
 	}

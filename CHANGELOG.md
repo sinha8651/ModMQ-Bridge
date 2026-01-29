@@ -37,6 +37,7 @@ All notable changes to this project will be documented here.
 - Enabled scheduling with bridge execution every 3 minutes
 - Added BridgeExecutor controller
 - Released first working build
+- Added some log message in connection method of both MODBUS and MQTT.
 
 ## [0.5.1] - 2025-11-10
 

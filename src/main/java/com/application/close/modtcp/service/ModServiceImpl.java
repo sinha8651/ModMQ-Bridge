@@ -19,8 +19,11 @@ import com.intelligt.modbus.jlibmodbus.exception.ModbusProtocolException;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMaster;
 import com.intelligt.modbus.jlibmodbus.master.ModbusMasterFactory;
 import com.intelligt.modbus.jlibmodbus.tcp.TcpParameters;
-import lombok.RequiredArgsConstructor;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class ModServiceImpl implements ModService {
@@ -81,7 +84,9 @@ public class ModServiceImpl implements ModService {
 			InetAddress address = InetAddress.getByName(tcpData.getHost());
 			tcpParameters.setHost(address);
 		} catch (UnknownHostException e) {
-			throw new BadRequestException("Unknown Host: " + tcpData.getHost());
+			String mess = "Unknown Host: " + tcpData.getHost();
+			log.error(mess);
+			throw new BadRequestException(mess);
 		}
 
 		tcpParameters.setPort(tcpData.getPort());
@@ -92,7 +97,9 @@ public class ModServiceImpl implements ModService {
 		try {
 			modbusMaster.connect();
 		} catch (ModbusIOException e) {
-			throw new BadRequestException("Failed to connect Modbus master: " + e.getMessage());
+			String mess = "Failed to connect Modbus master: " + e.getMessage();
+			log.error(mess);
+			throw new BadRequestException(mess);
 		}
 
 		buffer.getModbusMaster().put(tcpId, modbusMaster);
@@ -118,7 +125,9 @@ public class ModServiceImpl implements ModService {
 	public String disconnect(int tcpId) {
 		ModbusMaster modbusMaster = buffer.getModbusMaster().get(tcpId);
 		if (modbusMaster == null) {
-			throw new BadRequestException(String.format("No Modbus master found for tcpId: %s", tcpId));
+			String mess = "No Modbus master found for tcpId: " + tcpId;
+			log.error(mess);
+			throw new BadRequestException(mess);
 		}
 
 		try {
@@ -127,8 +136,10 @@ public class ModServiceImpl implements ModService {
 			}
 			return String.format("Modbus master disconnected for tcpId: %s", tcpId);
 		} catch (ModbusIOException e) {
-			throw new BadRequestException(String.format(
-					"Failed to disconnect Modbus master for tcpId: %s, message: %s", tcpId, e.getMessage()));
+			String mess = String.format("Failed to disconnect Modbus master for tcpId: %s, message: %s", tcpId,
+					e.getMessage());
+			log.error(mess);
+			throw new BadRequestException(mess);
 		}
 	}
 
