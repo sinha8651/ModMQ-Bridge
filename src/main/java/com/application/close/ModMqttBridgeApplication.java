@@ -27,7 +27,7 @@ public class ModMqttBridgeApplication implements CommandLineRunner {
 		log.info("""
 
 				============================================================
-				        MODBUS – MQTT BRIDGE SERVICE
+				        MODBUS MQTT BRIDGE SERVICE
 				============================================================
 				 Application  : {}
 				 Version      : {}
@@ -35,10 +35,10 @@ public class ModMqttBridgeApplication implements CommandLineRunner {
 				 Status       : STARTED
 				------------------------------------------------------------
 				 Features:
-				  • Modbus TCP Data Acquisition
-				  • MQTT Publish Modbus Data
-				  • TLS Communication
-				  • Reliable Data Bridging
+				  -> Modbus TCP Data Acquisition
+				  -> MQTT Publish Modbus Data
+				  -> TLS Communication
+				  -> Reliable Data Bridging
 				============================================================
 				""", env.getProperty("spring.application.name"), env.getProperty("spring.application.version"),
 				env.getProperty("spring.profiles.active"));
