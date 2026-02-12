@@ -1,5 +1,7 @@
 package com.application.close.modtcp.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.application.close.modtcp.entity.TcpData;
 import com.application.close.modtcp.service.ModService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -109,6 +112,13 @@ public class ModServiceController {
 		modService.writeMultipleRegisters(tcpId, slaveId, offset, values);
 		return ResponseEntity.ok(String.format("Successfully wrote %d registers starting at offset %d on slave %d",
 				values.length, offset, slaveId));
+	}
+
+	@Operation(summary = "Get all active modbus", description = "Returns a list of currently active Modbus TCP devices.")
+	@GetMapping("/active")
+	public ResponseEntity<List<TcpData>> getActiveModbus() {
+		List<TcpData> activeMod = modService.getActiveModbus();
+		return ResponseEntity.ok(activeMod);
 	}
 
 }

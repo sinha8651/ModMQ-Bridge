@@ -32,6 +32,17 @@ All notable changes to this project will be documented here.
 
 - 2.1.1.42 → 42nd build of this version.
 
+## [0.5.3] - 2026-02-12
+
+### Added
+- API to retrieve all active MQTT connections.
+- API to retrieve all active Modbus connections.
+- API to retrieve all active Modbus–MQTT links.
+
+### Fixed
+- Fixed an issue where a folder was automatically created during MQTT connection.
+- Fixed an issue with MQTT parameter topics not working correctly.
+
 ## [0.5.2] - 2026-01-29
 
 - Enabled scheduling with bridge execution every 3 minutes

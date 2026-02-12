@@ -14,6 +14,8 @@ import com.application.close.links.payload.BridgeExecutorPayload;
 import com.application.close.links.repo.BridgeExecutorRepo;
 import com.application.close.links.repo.ModMqttLinksRepo;
 import com.application.close.modtcp.repo.TcpDataRepo;
+import com.application.close.mqtt.entity.MqttParam;
+import com.application.close.mqtt.repo.MqttParamRepo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +28,8 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 	private final ModMqttLinksRepo linksRepo;
 
 	private final TcpDataRepo tcpRepo;
+
+	private final MqttParamRepo paramRepo;
 
 	@Override
 	public BridgeExecutor createBridge(BridgeExecutorPayload executerPayload) {
@@ -57,7 +61,15 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 		bridgeExecutor.setPublishTopic(executerPayload.getPublishTopic());
 		bridgeExecutor.setQuantity(executerPayload.getQuantity());
 		bridgeExecutor.setSlaveId(executerPayload.getSlaveId());
-		return executorRepo.save(bridgeExecutor);
+		BridgeExecutor saved = executorRepo.save(bridgeExecutor);
+
+		MqttParam mp = paramRepo.findById(mqttParamId).orElse(null);
+		if (mp != null) {
+			mp.getPublishTopics().add(executerPayload.getPublishTopic());
+			paramRepo.save(mp);
+		}
+
+		return saved;
 	}
 
 	private boolean isValidFunction(String input) {
@@ -92,8 +104,10 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 			throw new BadRequestException("Mqtt param not links for tcpDataid: " + tcpDataId);
 		}
 
-		if (executorRepo.existsByPublishTopic(executerPayload.getPublishTopic()))
-			throw new BadRequestException("Given publish topics already register for tcpDataid: " + tcpDataId);
+		String savedTopics = bridgeExecutor.getPublishTopic();
+		String topics = executerPayload.getPublishTopic();
+		if (topics != null && !topics.equals(savedTopics) && executorRepo.existsByPublishTopic(topics))
+			throw new BadRequestException("Given publish topic is already registered for tcpDataId: " + tcpDataId);
 
 		if (!isValidFunction(executerPayload.getFunctionType()))
 			throw new BadRequestException("Given Function type invalid for tcpDataid: " + tcpDataId);
@@ -104,8 +118,16 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 		bridgeExecutor.setPublishTopic(executerPayload.getPublishTopic());
 		bridgeExecutor.setQuantity(executerPayload.getQuantity());
 		bridgeExecutor.setSlaveId(executerPayload.getSlaveId());
-		return executorRepo.save(bridgeExecutor);
+		BridgeExecutor updated = executorRepo.save(bridgeExecutor);
 
+		MqttParam mp = paramRepo.findById(mqttParamId).orElse(null);
+		if (mp != null) {
+			mp.getPublishTopics().remove(savedTopics);
+			mp.getPublishTopics().add(topics);
+			paramRepo.save(mp);
+		}
+
+		return updated;
 	}
 
 	@Override
@@ -134,6 +156,15 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 	@Override
 	public void deleteById(int executerId) {
 		BridgeExecutor bridgeExecutor = getById(executerId);
+
+		ModMqttLinks links = linksRepo.findByTcpId(bridgeExecutor.getTcpId()).orElse(null);
+		if (links != null) {
+			MqttParam mp = paramRepo.findById(links.getParamId()).orElse(null);
+			if (mp != null) {
+				mp.getPublishTopics().remove(bridgeExecutor.getPublishTopic());
+				paramRepo.save(mp);
+			}
+		}
 		executorRepo.delete(bridgeExecutor);
 	}
 

@@ -1,5 +1,7 @@
 package com.application.close.links.service;
 
+import java.util.List;
+
 import com.application.close.links.entity.ModMqttLinks;
 
 public interface ModMqttLinksService {
@@ -13,5 +15,7 @@ public interface ModMqttLinksService {
 	void removeLinksOfParamId(int paramId);
 
 	void deleteByModTcpId(int tcpId);
+
+	List<ModMqttLinks> getAllLinks();
 
 }

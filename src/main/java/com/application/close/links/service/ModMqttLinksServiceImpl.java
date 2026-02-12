@@ -1,5 +1,7 @@
 package com.application.close.links.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.application.close.exception.ResourceNotFoundException;
@@ -59,6 +61,11 @@ public class ModMqttLinksServiceImpl implements ModMqttLinksService {
 			links.setParamId(0);
 			linksRepo.save(links);
 		}
+	}
+
+	@Override
+	public List<ModMqttLinks> getAllLinks() {
+		return linksRepo.findAll();
 	}
 
 }

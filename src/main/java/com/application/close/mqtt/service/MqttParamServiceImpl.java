@@ -57,6 +57,8 @@ public class MqttParamServiceImpl implements MqttParamService {
 		param.setAutoReconnect(paramPayload.isAutoReconnect());
 		param.setCleanStart(paramPayload.isCleanStart());
 		param.setQos(paramPayload.getQos());
+		param.setPublishTopics(new ArrayList<>());
+		param.setSubscribeTopics(new ArrayList<>());
 		return paramRepo.save(param);
 	}
 

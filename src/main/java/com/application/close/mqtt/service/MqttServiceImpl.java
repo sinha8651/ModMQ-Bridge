@@ -1,11 +1,16 @@
 package com.application.close.mqtt.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.stereotype.Service;
 
 import com.application.close.exception.BadRequestException;
@@ -48,7 +53,7 @@ public class MqttServiceImpl implements MqttService {
 		try {
 			log.info("Attempting to connect MQTT client [clientId={}, url={}]", param.getClientId(), param.getUrl());
 
-			mqttClient = new MqttClient(param.getUrl(), param.getClientId());
+			mqttClient = new MqttClient(param.getUrl(), param.getClientId(), new MemoryPersistence());
 			mqttClient.setCallback(new MqttCallbackExtended() {
 
 				@Override
@@ -204,6 +209,14 @@ public class MqttServiceImpl implements MqttService {
 		} catch (MqttException e) {
 			log.error("Failed to disconnect MQTT client with paramId: {} , message: {}", paramId, e.getMessage());
 		}
+	}
+
+	@Override
+	public List<MqttParam> getActiveMqtt() {
+		List<MqttParam> activeList = new ArrayList<>();
+		buffer.getMqttClient().entrySet().stream().filter(entry -> entry.getValue().isConnected())
+				.map(entry -> paramRepo.findById(entry.getKey())).flatMap(Optional::stream).forEach(activeList::add);
+		return activeList;
 	}
 
 }

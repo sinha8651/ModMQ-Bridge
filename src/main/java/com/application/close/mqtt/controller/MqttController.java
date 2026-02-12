@@ -1,12 +1,16 @@
 package com.application.close.mqtt.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.application.close.mqtt.entity.MqttParam;
 import com.application.close.mqtt.service.MqttService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,5 +44,12 @@ public class MqttController {
 	public ResponseEntity<String> disconnect(@PathVariable Integer paramId) {
 		mqttService.disconnect(paramId);
 		return ResponseEntity.ok("MQTT client disconnected successfully.");
+	}
+
+	@Operation(summary = "Get all active mqtt", description = "Returns a list of currently active MQTT clients.")
+	@GetMapping("/active")
+	public ResponseEntity<List<MqttParam>> getActiveMqtt() {
+		List<MqttParam> activeMqtt = mqttService.getActiveMqtt();
+		return ResponseEntity.ok(activeMqtt);
 	}
 }

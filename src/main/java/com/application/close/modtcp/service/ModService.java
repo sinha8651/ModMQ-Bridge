@@ -1,5 +1,9 @@
 package com.application.close.modtcp.service;
 
+import java.util.List;
+
+import com.application.close.modtcp.entity.TcpData;
+
 public interface ModService {
 
 	String connectToSlaveDevice(int tcpId);
@@ -7,6 +11,8 @@ public interface ModService {
 	String reconnect(int tcpId);
 
 	String disconnect(int tcpId);
+
+	List<TcpData> getActiveModbus();
 
 	boolean[] readCoils(int tcpId, int slaveId, int offset, int quantity);
 

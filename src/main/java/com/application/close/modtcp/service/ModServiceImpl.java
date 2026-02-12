@@ -2,7 +2,10 @@ package com.application.close.modtcp.service;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -268,6 +271,14 @@ public class ModServiceImpl implements ModService {
 			throw new ModbusOperationException("No existing Modbus master found for tcpId: " + tcpId);
 		}
 		return master;
+	}
+
+	@Override
+	public List<TcpData> getActiveModbus() {
+		List<TcpData> activeList = new ArrayList<>();
+		buffer.getModbusMaster().entrySet().stream().filter(entry -> entry.getValue().isConnected())
+				.map(entry -> tcpRepo.findById(entry.getKey())).flatMap(Optional::stream).forEach(activeList::add);
+		return activeList;
 	}
 
 }
