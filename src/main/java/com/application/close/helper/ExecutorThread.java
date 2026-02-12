@@ -49,7 +49,7 @@ public class ExecutorThread {
 
 	@Scheduled(fixedRate = 180000, initialDelay = 180000)
 	public void fetchingModbusData() {
-		log.info("\n--------Bridge executors started--------\n");
+		log.info("[BRIDGE] Bridge execution started");
 		executor.submit(this::processModbusBridges);
 	}
 
@@ -57,11 +57,13 @@ public class ExecutorThread {
 		List<BridgeExecutor> bridgeList = executorService.getAll();
 
 		if (bridgeList == null || bridgeList.isEmpty()) {
-			log.info("No bridge executors found — skipping execution.");
+			log.info("[BRIDGE] No bridge executors found — skipping execution.");
 			return;
 		}
 
 		for (BridgeExecutor bridge : bridgeList) {
+			log.info("[BRIDGE] Starting bridge executor | bridgeId: {} | functionType: {}", bridge.getId(),
+					bridge.getFunctionType());
 			try {
 				int tcpId = bridge.getTcpId();
 				ModMqttLinks links = linksRepo.findByTcpId(tcpId)
@@ -86,7 +88,7 @@ public class ExecutorThread {
 
 				int qos = paramRepo.findById(paramId).map(MqttParam::getQos).orElse((byte) 0);
 
-				log.info("Processing Modbus → MQTT bridge [TCP ID: {}, MQTT ID: {}]", tcpId, paramId);
+				log.info("[BRIDGE] Processing Modbus → MQTT bridge [TCP ID: {}, MQTT ID: {}]", tcpId, paramId);
 
 				Object[] result = readModbusData(bridge);
 				DataParser mqttData = getMqttData(bridge, result);
@@ -97,14 +99,15 @@ public class ExecutorThread {
 
 				executorService.updateTimesatamp(bridge.getId());
 
-				log.info("Modbus → MQTT bridge executed successfully [TCP ID: {}, MQTT ID: {}]", tcpId, paramId);
+				log.info("[BRIDGE] Modbus → MQTT bridge executed successfully [TCP ID: {}, MQTT ID: {}]", tcpId,
+						paramId);
 
 			} catch (ModbusOperationException ex) {
-				log.error("Modbus read failed. TcpDataId: {}, FunctionType: {}, ExecutorName: {}, Reason: {}",
+				log.error("[BRIDGE] Modbus read failed. TcpDataId: {}, FunctionType: {}, ExecutorName: {}, Reason: {}",
 						bridge.getTcpId(), bridge.getFunctionType(), bridge.getBridgeName(), ex.getMessage());
 
 			} catch (Exception ex) {
-				log.error("Unexpected error. TcpDataId: {}, FunctionType: {}, ExecutorName: {}, message: {}",
+				log.error("[BRIDGE] Unexpected error. TcpDataId: {}, FunctionType: {}, ExecutorName: {}, message: {}",
 						bridge.getTcpId(), bridge.getFunctionType(), bridge.getBridgeName(), ex.getMessage(), ex);
 			}
 

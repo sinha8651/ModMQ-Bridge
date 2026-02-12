@@ -38,6 +38,8 @@ All notable changes to this project will be documented here.
 - API to retrieve all active MQTT connections.
 - API to retrieve all active Modbus connections.
 - API to retrieve all active Modbus–MQTT links.
+- Added startup logs for the application.
+- Added detailed logs in the Bridge Executor service.
 
 ### Fixed
 - Fixed an issue where a folder was automatically created during MQTT connection.

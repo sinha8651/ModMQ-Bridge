@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.application.close</groupId>
 	<artifactId>modbus-mqtt-gateway</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<name>ModMQ Bridge</name>
 	<description>A project transforms modbus polling data into real-time MQTT
 		streams—accessible anytime and anywhere.</description>
