@@ -34,6 +34,11 @@ All notable changes to this project will be documented here.
 
 ## [0.5.3] - 2026-02-12
 
+### Removed
+- Removed unwanted dependencies from pom file.
+
+## [0.5.3] - 2026-02-12
+
 ### Added
 - API to retrieve all active MQTT connections.
 - API to retrieve all active Modbus connections.
