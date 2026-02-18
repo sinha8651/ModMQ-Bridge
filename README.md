@@ -102,7 +102,7 @@ java -jar target/modbus-mqtt-gateway-1.0.0.jar
 
 ## Versioning & Releases
 
-* Current Release: **v1.0.0**
+* Current Release: **v1.0.1**
 * Versioning follows semantic versioning:
 
   * `v1.0.x` – Bug fixes
