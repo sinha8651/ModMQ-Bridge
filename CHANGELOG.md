@@ -32,6 +32,12 @@ All notable changes to this project will be documented here.
 
 - 2.1.1.42 → 42nd build of this version.
 
+## [0.5.4] - 2026-07-15
+
+### Added
+- Improved bridge cache initialization
+- Enhanced application startup initialization
+
 ## [0.5.3] - 2026-02-12
 
 ### Removed

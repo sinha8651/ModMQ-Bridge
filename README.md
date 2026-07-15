@@ -41,7 +41,7 @@ http://localhost:8080/swagger-ui/index.html
 
 The application uses **PostgreSQL** for persistent storage.
 
-### Current State (v1.0.0)
+### Current State (v1.0.2)
 
 * PostgreSQL is integrated using JPA / Hibernate
 * Used for persisting:
@@ -95,14 +95,14 @@ mvn clean package
 ### Run
 
 ```bash
-java -jar target/modbus-mqtt-gateway-1.0.0.jar
+java -jar target/modbus-mqtt-gateway-1.0.2.jar
 ```
 
 ---
 
 ## Versioning & Releases
 
-* Current Release: **v1.0.0**
+* Current Release: **v1.0.2**
 * Versioning follows semantic versioning:
 
   * `v1.0.x` – Bug fixes

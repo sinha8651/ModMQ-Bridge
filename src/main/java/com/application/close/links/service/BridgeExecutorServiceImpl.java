@@ -1,12 +1,14 @@
 package com.application.close.links.service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.application.close.exception.BadRequestException;
 import com.application.close.exception.ResourceNotFoundException;
+import com.application.close.helper.MemoryBuffer;
 import com.application.close.links.ModbusFunctionType;
 import com.application.close.links.entity.BridgeExecutor;
 import com.application.close.links.entity.ModMqttLinks;
@@ -18,7 +20,9 @@ import com.application.close.mqtt.entity.MqttParam;
 import com.application.close.mqtt.repo.MqttParamRepo;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @RequiredArgsConstructor
 @Service
 public class BridgeExecutorServiceImpl implements BridgeExecutorService {
@@ -30,6 +34,8 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 	private final TcpDataRepo tcpRepo;
 
 	private final MqttParamRepo paramRepo;
+
+	private final MemoryBuffer buffer;
 
 	@Override
 	public BridgeExecutor createBridge(BridgeExecutorPayload executerPayload) {
@@ -172,6 +178,15 @@ public class BridgeExecutorServiceImpl implements BridgeExecutorService {
 	public List<Integer> getAllTcpId() {
 		List<Integer> tcpIds = executorRepo.findAll().stream().map(t -> t.getTcpId()).toList();
 		return tcpIds;
+	}
+
+	@Override
+	public void reloadCache() {
+		List<BridgeExecutor> lists = getAll();
+		for (BridgeExecutor b : lists) {
+			buffer.getBridges().put(b.getId(), b);
+		}
+		log.info("Bridge cache reloaded successfully.");
 	}
 
 }

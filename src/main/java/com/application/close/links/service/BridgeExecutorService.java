@@ -23,4 +23,6 @@ public interface BridgeExecutorService {
 
 	void deleteById(int executerId);
 
+	void reloadCache();
+
 }
